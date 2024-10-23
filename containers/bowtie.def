@@ -25,11 +25,11 @@ Bowtie2 ({{ BowtieVersion }}) container for mapping fastq on reference genome
 	wget -O bowtie-{{ BowtieVersion }}-linux-x86_64.zip https://sourceforge.net/projects/bowtie-bio/files/bowtie/{{ BowtieVersion }}/bowtie-{{ BowtieVersion }}-linux-x86_64.zip/download \
 	&& unzip bowtie-{{ BowtieVersion }}-linux-x86_64.zip \
 	&& chmod +x bowtie-{{ BowtieVersion }}/bowtie \
-	&& ln -s bowtie-{{ BowtieVersion }}/bowtie /usr/local/bin/bowtie
+	&& echo "export PATH=${PATH}:/bowtie-{{ BowtieVersion }}" >> $APPTAINER_ENVIRONMENT
 
 %runscript
 	echo "Script arguments: $*"
-	exec /bowtie-{{ BowtieVersion }}/bowtie $@
+	exec bowtie $@
 
 %test
 	OS=$(grep ^NAME= /etc/os-release | cut -d '=' -f 2)
