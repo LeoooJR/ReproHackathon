@@ -1,0 +1,33 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+
+    # Dependancies
+    apt-get update && apt-get install -y \
+    wget \
+    default-jre \
+    unzip \
+    perl \
+    libfindbin-libs-perl \
+    libcommons-math3-java \
+    libjbzip2-java \
+    libhtsjdk-java
+
+    # Download and install FastQC
+    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip
+    unzip fastqc_v0.12.1.zip -d /opt
+    chmod +x /opt/FastQC/fastqc
+    ln -s /opt/FastQC/fastqc /usr/local/bin/fastqc
+
+%runscript
+    echo "Running FastQC"
+    exec /opt/FastQC/fastqc "$@"
+
+%labels
+    Version v0.12.1
+    Author Jaffar
+
+%help
+    This container includes FastQC v0.12.1 for quality control of sequencing data.
