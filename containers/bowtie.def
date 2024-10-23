@@ -29,7 +29,7 @@ Bowtie2 ({{ BowtieVersion }}) container for mapping fastq on reference genome
 
 %runscript
 	echo "Script arguments: $*"
-	exec bowtie-{{ BowtieVersion }}/bowtie $@
+	exec /bowtie-{{ BowtieVersion }}/bowtie $@
 
 %test
 	OS=$(grep ^NAME= /etc/os-release | cut -d '=' -f 2)
