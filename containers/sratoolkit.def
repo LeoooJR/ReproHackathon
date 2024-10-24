@@ -1,0 +1,55 @@
+Bootstrap: docker
+
+From: ubuntu:{{ OSVersion }}
+
+%arguments
+	OSVersion=20.04
+
+%help
+
+Container for the SRA Toolkit library
+
+%labels
+	Librarie SRATookKit
+	Librarie.version Current
+	Recipe.Version 1.0
+	Maintainer leo.jourdain@etu-upsaclay.fr
+
+%post
+	apt-get update && apt-get install -y \
+	wget
+
+	wget -O sratoolkit.ubuntu64.tar.gz https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz \
+	&& tar -vxzf sratoolkit.ubuntu64.tar.gz \
+	&& echo "export PATH:${PATH}:/$(find sratoolkit.*-ubuntu64 -type d -name bin -print)" >> APPTAINER_ENVIRONMENT
+	wget -O md5sum.txt https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.1.1/md5sum.txt
+
+
+%runscript
+	echo "Script arguments: $*"
+	exec fastq-dump $@
+
+%test
+	OS=$(grep ^NAME= /etc/os-release | cut -d '=' -f 2)
+        grep -q NAME=\"Ubuntu\" /etc/os-release
+        if [ $? -eq 0 ]; then
+                echo "Succes: Operating system: ${OS}"
+        else
+                echo "Error: Operating system: ${OS}"
+                exit 1
+        fi
+        OS_VERSION=$(grep ^VERSION_ID= /etc/os-release | cut -d '=' -f 2)
+        grep -q VERSION_ID=\"{{ OSVersion }}\" /etc/os-release
+        if [ $? -eq 0 ]; then
+                echo "Succes: Operating system version: ${OS_VERSION}"
+        else
+                echo "Error: Operating system version: ${OS_VERSION}"
+                exit 1
+        fi
+	echo "$(grep 'sratoolkit.*-ubuntu64' md5sum.txt | cut -d ' ' -f 1)  sratoolkit.ubuntu64.tar.gz" | md5sum -c --status
+	if [ $? -eq 0 ]; then
+		echo "Succes: SRAToolKit integrity: $(md5sum sratoolkit.ubuntu64.tar.gz)"
+	else
+		echo "Error: SRAToolKit integrity: $(md5sum sratoolkit.ubuntu64.tar.gz)"
+		exit 1
+	fi
