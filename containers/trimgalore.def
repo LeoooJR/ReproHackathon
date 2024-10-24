@@ -1,0 +1,60 @@
+Bootstrap: docker
+
+From: ubuntu:{{ OSVersion }}
+
+%arguments
+	OSVersion=20.04
+
+%help
+
+TrimGalore container for trimming sequenced read
+
+%labels
+
+	Software TrimGalore
+	Software.version 
+	Recipe.version 1.0
+	Maintainer leo.jourdain@etu-upsaclay.fr
+
+%environment
+
+	export PATH=${PATH}:/FastQC:/TrimGalore-0.6.10
+
+%post
+	apt-get update && apt-get install -y \
+	defaut-jre \
+	perl \
+	cutadapt \
+	unzip \
+	wget \
+	curl
+
+	wget -O fastqc_v0.12.1.zip  https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip \
+	&& unzip fastqc_v0.12.1.zip
+	
+	curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.10.tar.gz -o trim_galore.tar.gz \
+	&& tar xvzf trim_galore.tar.gz
+
+	apt-get clean
+
+%runscript
+	echo "Script arguments: $*"
+	exec trim_galore $@
+
+%test
+	OS=$(grep ^NAME= /etc/os-release | cut -d '=' -f 2)
+        grep -q NAME=\"Ubuntu\" /etc/os-release
+        if [ $? -eq 0 ]; then
+                echo "Succes: Operating system: ${OS}"
+        else
+                echo "Error: Operating system: ${OS}"
+                exit 1
+        fi
+        OS_VERSION=$(grep ^VERSION_ID= /etc/os-release | cut -d '=' -f 2)
+        grep -q VERSION_ID=\"{{ OSVersion }}\" /etc/os-release
+        if [ $? -eq 0 ]; then
+                echo "Succes: Operating system version: ${OS_VERSION}"
+        else
+                echo "Error: Operating system version: ${OS_VERSION}"
+                exit 1
+        fi
