@@ -21,7 +21,7 @@ Container for the SRA Toolkit library
 
 	wget -O sratoolkit.ubuntu64.tar.gz https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz \
 	&& tar -vxzf sratoolkit.ubuntu64.tar.gz \
-	&& echo "export PATH:${PATH}:/$(find sratoolkit.*-ubuntu64 -type d -name bin -print)" >> APPTAINER_ENVIRONMENT
+	&& echo "export PATH=${PATH}:/$(find sratoolkit.*-ubuntu64 -type d -name bin -print)" >> $APPTAINER_ENVIRONMENT
 	wget -O md5sum.txt https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/3.1.1/md5sum.txt
 
 
