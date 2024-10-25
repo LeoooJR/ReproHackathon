@@ -1,25 +1,40 @@
 Bootstrap: docker
-From: ubuntu:20.04
+From: ubuntu:{{ OS_VERSION }}
+
+%arguments
+	OS_VERSION=20.04
+	R_VERSION=3.4.1
+
+%help
+R ({{ OS_VERSION }}) container for RNA-Seq analysis with DESEq2
+
+%labels
+	Software R
+	Software.version {{ R_VERSION }}
+	Recipe.version 1.0
+	Maintainer leo.jourdain@etu-upsaclay.fr/jaffar.gura@etu-upsaclay.fr
 
 %post
-    export DEBIAN_FRONTEND=noninteractive
+	export DEBIAN_FRONTEND=noninteractive
+	apt update && apt install -y \
+	wget
 
-    # Install necessary dependencies
-    apt-get update && apt-get install -y \
-    wget \
-    gpg \
-    dirmngr \
-    ca-certificates
-
-    # 
-    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys E084DAB9
-    add-apt-repository 'deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/'
-
-    # Update and install R from CRAN
-    apt-get update && apt-get install -y r-base
+	sed -i.bak "/^#.*deb-src.*universe$/s/^# //g" /etc/apt/sources.list \
+	&& apt update \
+	&& apt build-dep -y r-base \
+	&& wget -O R-{{ R_VERSION }}.tar.gz https://cran.rstudio.com/src/base/R-3/R-{{ R_VERSION }}.tar.gz \
+	&& tar -xzvf R-{{ R_VERSION }}.tar.gz \
+	&& cd /R-{{ R_VERSION }} \
+	&& ./configure \
+	--prefix=/opt/R/{{ R_VERSION }} \
+	--with-blas \
+	--with-lapack
+	
+	make
+	make install
 
 %environment
-    export PATH=/usr/local/bin:$PATH
+    export PATH=${PATH}:/opt/R/{{ R_VERSION }}/bin
 
 %runscript
     exec R "$@"
