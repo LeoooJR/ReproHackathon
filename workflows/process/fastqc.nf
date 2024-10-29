@@ -1,6 +1,11 @@
 #!/usr/bin/env nextflow
 
-// Define the FastQC process, responsible for running quality control on FASTQ files
+/**
+ * Define the FastQC process, responsible for running quality control on FASTQ files
+ * It takes FASTQ files as input and generates a quality report in HTML format 
+ * and a compressed ZIP file containing detailed analysis results.
+ */
+
 process runfastqc {
 
     // Specify the computational resources needed for the process
@@ -13,16 +18,18 @@ process runfastqc {
 
     // Define the input: a tuple with the sample ID and the path to the FASTQ files
     input:
-    tuple val(sample_id), path(fastq_files)
+    tuple val(sample_id), path(fastq_file)
 
     // Define the output: the FastQC HTML report and ZIP file for each sample
     output:
-    path("${sample_id}_fastqc.html"), emit: report   // Emit the FastQC HTML report with the sample ID
-    path("${sample_id}_fastqc.zip"), emit: zip       // Emit the FastQC ZIP archive with the sample ID
+    // Emit the FastQC HTML report with the sample ID
+    path("${sample_id}_fastqc.html"), emit: report   
+    // Emit the FastQC ZIP archive with the sample ID
+    path("${sample_id}_fastqc.zip"), emit: zip       
 
-    // The script section where the command to run FastQC is defined
+    //Execute FastQC with the specified number of threads and output directory
     script:
     """
-    fastqc --threads $task.cpus --outdir ./ ${fastq_files}  // Run FastQC with the specified number of threads
+    fastqc --threads $task.cpus --outdir ./ ${fastq_files} 
     """
 }
