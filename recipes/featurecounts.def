@@ -1,0 +1,53 @@
+Bootstrap: docker
+From: ubuntu:{{ OSVersion }}
+
+%arguments
+    OSVersion=20.04
+    featureCountsVersion=1.4.6
+
+%help
+
+FeatureCounts ({{ featureCountsVersion }}) container for counting reads 
+
+%labels
+
+    Software FeatureCounts
+    Software.version {{ featureCountsVersion }}
+    Recipe.Version 1.0 
+    Maintainer levy.meliga-yonguet@etu-upsaclay.fr 
+
+%post
+    apt-get update
+    apt-get install -y wget build-essential zlib1g-dev
+
+    wget -O subread-1.4.6-Linux-x86_64.tar.gz https://sourceforge.net/projects/subread/files/subread-1.4.6/subread-1.4.6-Linux-x86_64.tar.gz
+
+    tar -zxvf subread-1.4.6-Linux-x86_64.tar.gz
+
+    mv subread-1.4.6-Linux-x86_64 /usr/local/subread-1.4.6
+
+    echo "export PATH=\$PATH:/usr/local/subread-1.4.6/bin" >> /environment
+
+%runscript
+    echo "FeatureCounts' arguments: $*"
+    exec featureCounts "$@"
+
+%test
+    OS=$(grep ^NAME= /etc/os-release | cut -d '=' -f 2)
+    grep -q NAME=\"Ubuntu\" /etc/os-release
+    if [ $? -eq 0 ]; then
+        echo "Success: Operating system: ${OS}"
+    else
+        echo "Error: Operating system: ${OS}"
+        exit 1
+    fi
+
+    OS_VERSION=$(grep ^VERSION_ID= /etc/os-release | cut -d '=' -f 2)
+    grep -q VERSION_ID=\"{{ OSVersion }}\" /etc/os-release
+    if [ $? -eq 0 ]; then
+        echo "Success: Operating system version: ${OS_VERSION}"
+    else
+        echo "Error: Operating system version: ${OS_VERSION}"
+        exit 1
+    fi
+
