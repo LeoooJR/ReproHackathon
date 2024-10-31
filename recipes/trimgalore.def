@@ -17,25 +17,38 @@ TrimGalore container for trimming sequenced read
 	Maintainer leo.jourdain@etu-upsaclay.fr
 
 %environment
-
-	export PATH=${PATH}:/FastQC:/TrimGalore-0.6.10
+	export PATH=${PATH}:/FastQC:/TrimGalore-0.6.10:${HOME}/.local/bin/
 
 %post
+	export DEBIAN_FRONTEND=noninteractive
 	apt-get update && apt-get install -y \
-	defaut-jre \
+	default-jre \
+	build-essential \
+	libssl-dev \
+	python3-dev \
 	perl \
-	cutadapt \
 	unzip \
 	wget \
 	curl
 
 	wget -O fastqc_v0.12.1.zip  https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip \
 	&& unzip fastqc_v0.12.1.zip
-	
-	curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.10.tar.gz -o trim_galore.tar.gz \
-	&& tar xvzf trim_galore.tar.gz
 
-	apt-get clean
+	wget -O Python-3.5.10.tgz  https://www.python.org/ftp/python/3.5.10/Python-3.5.10.tgz \
+	&& tar -xvzf Python-3.5.10.tgz \
+	&& cd Python-3.5.10 \
+	&& ./configure --enable-optimizations \
+	&& make \
+	&& make altinstall \
+	&& cd .. \
+	&& wget -O cutadapt-1.11.tar.gz https://files.pythonhosted.org/packages/47/bf/9045e90dac084a90aa2bb72c7d5aadefaea96a5776f445f5b5d9a7a2c78b/cutadapt-1.11.tar.gz \
+	&& tar -xvzf cutadapt-1.11.tar.gz \
+	&& cd cutadapt-1.11 \
+	&& python3.5 setup.py install --user \
+	&& cd ..
+
+	curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.10.tar.gz -o trim_galore.tar.gz \
+	&& tar -xvzf trim_galore.tar.gz
 
 %runscript
 	echo "Script arguments: $*"
