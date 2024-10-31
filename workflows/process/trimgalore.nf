@@ -20,7 +20,7 @@
     input:
     path(fastq_file)
 
-    // Define the output: 
+    // Define the output: Fastq file with trimmed reads
     output: 
     path "*_trimmed.fastq", emit: trimmed 
 
