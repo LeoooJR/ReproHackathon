@@ -27,7 +27,7 @@ process featureCounts {
     // Define the output: the text file containing the count of reads for each gene
     path "*.txt", emit: counts // one txt file per bam file or just one depending on the input
 
-    // //Execute featureCounts with the specified number of threads
+    // Execute featureCounts with the specified number of threads
     script:
     """
 
