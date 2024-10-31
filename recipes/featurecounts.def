@@ -20,13 +20,10 @@ FeatureCounts ({{ featureCountsVersion }}) container for counting reads
     apt-get update
     apt-get install -y wget build-essential zlib1g-dev
 
-    wget -O subread-1.4.6-Linux-x86_64.tar.gz https://sourceforge.net/projects/subread/files/subread-1.4.6/subread-1.4.6-Linux-x86_64.tar.gz
-
-    tar -zxvf subread-1.4.6-Linux-x86_64.tar.gz
-
-    mv subread-1.4.6-Linux-x86_64 /usr/local/subread-1.4.6
-
-    echo "export PATH=\$PATH:/usr/local/subread-1.4.6/bin" >> /environment
+    wget -O subread-1.4.6-Linux-x86_64.tar.gz https://sourceforge.net/projects/subread/files/subread-1.4.6/subread-1.4.6-Linux-x86_64.tar.gz \
+    && tar -zxvf subread-1.4.6-Linux-x86_64.tar.gz \
+    && mv subread-1.4.6-Linux-x86_64 /usr/local/subread-1.4.6 \
+    && echo "export PATH=\$PATH:/usr/local/subread-1.4.6/bin" >> /environment
 
 %runscript
     echo "FeatureCounts' arguments: $*"
@@ -49,5 +46,14 @@ FeatureCounts ({{ featureCountsVersion }}) container for counting reads
     else
         echo "Error: Operating system version: ${OS_VERSION}"
         exit 1
+    fi
+    
+    SUBREAD_MD5=983383a6870093af3f51d692406c828b
+    echo "${SUBREAD_MD5}  subread-{{ featureCountsVersion }}-linux-x86_64.tar.gz" | md5sum -c --status
+	if [ $? -eq 0 ]; then
+        echo "Succes: Subread binary integrity: $(md5sum subread-{{ featureCountsVersion }}-linux-x86_64.tar.gz)"
+    else
+        echo "Error: Subread binary integrity: $(md5sum subread-{{ featureCountsVersion }}-linux-x86_64.tar.gz)"
+		exit 1
     fi
 

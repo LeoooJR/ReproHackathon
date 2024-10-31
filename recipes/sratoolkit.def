@@ -53,3 +53,16 @@ Container for the SRA Toolkit library
 		echo "Error: SRAToolKit integrity: $(md5sum sratoolkit.ubuntu64.tar.gz)"
 		exit 1
 	fi
+	DIR=sratoolkit.*-ubuntu64
+	if [ ! -d sratoolkit.*-ubuntu64 ]; then
+                echo "Error: No such directory in the container: ${DIR}"
+                exit 1
+        else
+                echo "Succes: Software directory succesfully found in the container: ${DIR}"
+        fi
+        if echo ${PATH} | grep -q /${DIR}; then
+                echo "Succes: PATH succesfully updated"
+        else
+                echo "Error: Software bin directory /${DIR} not in PATH"
+                exit 1
+        fi
