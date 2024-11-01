@@ -6,12 +6,13 @@
  */
 
 process downloadfastq {
-    // Define the container for the SRA Toolkit
-    container 'sratoolkit_latest.sif'
+
+    label 'highCPU'
+    label 'medMem'
 
     input:
     // List of SRA IDs to download
-    val sra_id
+    each sra_id
 
     output:
     // Emit the SRA ID and the corresponding compressed FASTQ file
@@ -19,10 +20,10 @@ process downloadfastq {
 
     script:
     """
-    // Use fasterq-dump to download the SRA data and convert it to FASTQ format
-    fasterq-dump --threads $task.cpus --progress ${sra_id}
+    # Use fasterq-dump to download the SRA data and convert it to FASTQ format
+    fasterq-dump --threads 4 --progress ${sra_id}
     
-    // Compress the FASTQ files using gzip
+    # Compress the FASTQ files using gzip
     gzip *.fastq
     """
 }

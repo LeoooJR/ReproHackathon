@@ -6,14 +6,12 @@ include { fastqc } from './process/fastqc.nf'
 
 workflow {
     // List of SRA identifiers to be processed
-    sra_ids = ['SRX7080617','SRX7080616','SRX7080615','SRX7080614','SRX7080613','SRX7080612']
+    sra_ids = ['SRR10379721','SRR10379722','SRR10379723','SRR10379724','SRR10379725','SRR10379726']
 
     // Iterate over each SRA identifier
-    sra_ids.each { id ->
-        // Download FASTQ files for the current SRA identifier
-        fastq_file = downloadfastq(id)
+    // Download FASTQ files for the current SRA identifier
+    fastq_file = downloadfastq(sra_ids)
 
-        // Run FastQC on each downloaded FASTQ file
-        fastqc(fastq_file)
-    }
+    // Run FastQC on each downloaded FASTQ file
+    fastqc(fastq_file)
 }

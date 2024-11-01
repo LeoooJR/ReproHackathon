@@ -6,13 +6,10 @@
  * and a compressed ZIP file containing detailed analysis results.
  */
 
-process runfastqc {
+process fastqc {
 
     label 'lowMem'
     label 'lowCPU'
-
-    // Define the Apptainer container to be used for running FastQC
-    container 'fastqc_latest.sif'
 
     // Define the input: a tuple with the sample ID and the path to the FASTQ files
     input:
