@@ -17,7 +17,8 @@ Container for the SRA Toolkit library
 
 %post
 	apt-get update && apt-get install -y \
-	wget
+	wget \
+	pigz
 
 	wget -O sratoolkit.ubuntu64.tar.gz https://ftp-trace.ncbi.nlm.nih.gov/sra/sdk/current/sratoolkit.current-ubuntu64.tar.gz \
 	&& tar -vxzf sratoolkit.ubuntu64.tar.gz \
