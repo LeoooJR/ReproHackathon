@@ -7,6 +7,9 @@
 
 process bowtie_index {
 
+    label 'medMem'
+    label 'medCPU'
+
     // Define the Singularity container to be used for running bowtie
     container 'bowtie.sif'
 

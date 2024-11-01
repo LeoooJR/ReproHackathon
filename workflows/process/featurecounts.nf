@@ -11,10 +11,8 @@
 
 process featureCounts {
 
-    // Specify the computational resources needed for the process
-    cpus 4           // Allocate 4 CPU cores for this process
-    memory '4 GB'    // Allocate 4 GB of RAM
-    time '1h'        // Set a time limit of 1 hour for this process
+    label 'medMem'
+    label 'medCPU'
 
     // Define the Singularity container to be used for running featureCounts
     container 'featurecounts.sif'

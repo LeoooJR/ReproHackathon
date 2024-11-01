@@ -7,10 +7,8 @@
 
 process bowtie_mapping {
 
-    // Specify the computational resources needed for the process
-    cpus 4           // Allocate 4 CPU cores for this process
-    memory '4 GB'    // Allocate 4 GB of RAM
-    time '1h'        // Set a time limit of 1 hour for this process
+    label 'highMem'
+    label 'highCPU'
 
     // Define the Singularity container to be used for running bowtie
     container 'bowtie.sif'
