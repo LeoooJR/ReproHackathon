@@ -28,6 +28,6 @@ process runfastqc {
     //Execute FastQC with the specified number of threads and output directory
     script:
     """
-    fastqc --threads $task.cpus --outdir ./ ${fastq_files} 
+    fastqc --threads $task.cpus --outdir ./ ${fastq_file} 
     """
 }
