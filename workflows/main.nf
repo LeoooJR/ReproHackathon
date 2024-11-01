@@ -1,5 +1,8 @@
 nextflow.enable.dsl=2
 
+params.download = true
+params.fastq = "${params.outputDir}/FASTQ"
+
 // Import process
 include { downloadfastq } from './process/downloadfastq.nf'
 include { fastqc } from './process/fastqc.nf'
@@ -10,7 +13,12 @@ workflow {
 
     // Iterate over each SRA identifier
     // Download FASTQ files for the current SRA identifier
-    fastq_file = downloadfastq(sra_ids)
+    if(params.download) {
+        fastq_file = downloadfastq(sra_ids)
+    }
+    else {
+        channel.fromPath("${params.fastq}/*.fastq.gz").toSortedList().flatten().view()
+    }
 
     // Run FastQC on each downloaded FASTQ file
     fastqc(fastq_file)

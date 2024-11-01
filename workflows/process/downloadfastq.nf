@@ -7,6 +7,8 @@
 
 process downloadfastq {
 
+    publishDir "${params.outputDir}/FASTQ", mode: 'copy', overwrite: true, pattern: "*.fastq.gz"
+
     input:
     // List of SRA IDs to download
     val sra_id
