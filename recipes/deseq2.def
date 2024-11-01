@@ -2,7 +2,7 @@ Bootstrap: docker
 From: ubuntu:{{ OS_VERSION }}
 
 %arguments
-	OS_VERSION=20.04
+	OS_VERSION=18.04
 	R_VERSION=3.4.1
 
 %help
@@ -17,6 +17,16 @@ R ({{ OS_VERSION }}) container for RNA-Seq analysis with DESEq2
 %post
 	export DEBIAN_FRONTEND=noninteractive
 	apt update && apt install -y \
+	build-essential \
+	gfortran \
+	libxml2-dev \
+	libgfortran3 \
+	libssl-dev \
+	libcurl4-openssl-dev \
+	libcurl4 \
+	xorg-dev \
+	libxt-dev \
+	libstdc++6 \
 	wget
 
 	sed -i.bak "/^#.*deb-src.*universe$/s/^# //g" /etc/apt/sources.list \
@@ -28,10 +38,16 @@ R ({{ OS_VERSION }}) container for RNA-Seq analysis with DESEq2
 	&& ./configure \
 	--prefix=/opt/R/{{ R_VERSION }} \
 	--with-blas \
-	--with-lapack
+	--with-lapack \
+	--with-recommended-packages
 	
 	make
 	make install
+	cd ..
+	wget -O BiocInstaller_1.26.1.tar.gz https://bioconductor.org/packages/3.5/bioc/src/contrib/BiocInstaller_1.26.1.tar.gz \
+	&& /opt/R/{{ R_VERSION }}/bin/R CMD INSTALL BiocInstaller_1.26.1.tar.gz \
+	&& /opt/R/{{ R_VERSION }}/bin/Rscript -e 'library(BiocInstaller);options(repos = c(CRAN = "https://packagemanager.posit.co/cran/2017-10-10"));biocLite("DESeq2", ask=FALSE, suppressUpdates=TRUE, suppressAutoUpdate=TRUE, dependencies=TRUE, type="source")'
+
 
 %environment
     export PATH=${PATH}:/opt/R/{{ R_VERSION }}/bin

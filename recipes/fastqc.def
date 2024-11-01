@@ -16,10 +16,10 @@ From: ubuntu:20.04
     libhtsjdk-java
 
     # Download and install FastQC
-    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip
-    unzip fastqc_v0.12.1.zip -d /opt
-    chmod +x /opt/FastQC/fastqc
-    ln -s /opt/FastQC/fastqc /usr/local/bin/fastqc
+    wget https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip \
+    && unzip fastqc_v0.12.1.zip -d /opt \
+    && chmod +x /opt/FastQC/fastqc \
+    && ln -s /opt/FastQC/fastqc /usr/local/bin/fastqc
 
 %runscript
     echo "Running FastQC"
