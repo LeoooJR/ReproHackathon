@@ -6,6 +6,7 @@ params.fastq = "${params.outputDir}/FASTQ"
 // Import process
 include { downloadfastq } from './process/downloadfastq.nf'
 include { fastqc } from './process/fastqc.nf'
+include { trimgalore } from './process/trimgalore.nf'
 
 workflow {
     // List of SRA identifiers to be processed
@@ -17,9 +18,11 @@ workflow {
         fastq_file = downloadfastq(sra_ids)
     }
     else {
-        channel.fromPath("${params.fastq}/*.fastq.gz").toSortedList().flatten().view()
+        fastq_file = sra_ids.merge(channel.fromPath("${params.fastq}/*.fastq.gz").toSortedList().flatten())
     }
 
     // Run FastQC on each downloaded FASTQ file
     fastqc(fastq_file)
+
+    trimgalore(fastq_file.map { it[1] })
 }

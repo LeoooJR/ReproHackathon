@@ -17,7 +17,7 @@
 
     // Define the output: Fastq file with trimmed reads
     output: 
-    path "*_trimmed.fq.gz", emit: trimmed 
+    path "*_trimmed.fq.gz"
 
     // Execute trimgalore
     script:
