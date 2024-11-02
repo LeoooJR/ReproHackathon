@@ -17,15 +17,13 @@ process mapping {
 
     // Define the output : sorted BAM file and BAM index file
     output: 
-    path "aligned.bam", emit: bam 
-    path "aligned.bam.bai", emit: bai 
+    path "*.bam", emit: bam 
+    path "*.bam.bai", emit: bai 
 
     // Execute bowtie (mapping)
     script: 
     """
-    bowtie -p $task.cpus -S ${bowtie_index_prefix} <(gunzip -c ${fastq_file}) | \
-    samtools sort -@ $task.cpus -o aligned.bam 
-    samtools index aligned.bam 
+    bowtie -p $task.cpus -S ${bowtie_index_prefix} <(gunzip -c ${fastq_file})
     """
 
 }
