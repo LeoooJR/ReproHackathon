@@ -2,11 +2,14 @@ nextflow.enable.dsl=2
 
 params.download = true
 params.fastq = "${params.outputDir}/FASTQ"
+params.refg = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=CP000253.1&rettype=fasta"
 
 // Import process
 include { downloadfastq } from './process/downloadfastq.nf'
 include { fastqc } from './process/fastqc.nf'
 include { trimgalore } from './process/trimgalore.nf'
+include { mapping } from './process/bowtie.nf'
+include { indexingG } from './process/bowtie.nf'
 
 workflow {
     // List of SRA identifiers to be processed
@@ -24,5 +27,13 @@ workflow {
     // Run FastQC on each downloaded FASTQ file
     fastqc(fastq_file)
 
+    // Trimming each download FASTQ file
     trimgalore(fastq_file.map { it[1] })
+
+    // Bowtie indexing
+    genomeI = indexingG(params.refg)
+
+    //Bowtie Mapping
+    genomeM = mapping(fastq_file.map { it[1] },genomeI)
+
 }

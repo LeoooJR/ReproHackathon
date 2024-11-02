@@ -5,13 +5,10 @@
  */
 
 
-process bowtie_mapping {
+process mapping {
 
     label 'highMem'
     label 'highCPU'
-
-    // Define the Singularity container to be used for running bowtie
-    container 'bowtie.sif'
 
     // Define the input : gzipped FASTQ files with sequenced reads and the bowtie index 
     input: 
@@ -31,4 +28,36 @@ process bowtie_mapping {
     samtools index aligned.bam 
     """
 
+}
+
+/**
+ * This process uses a bowtie genome index from a fasta file. 
+ */
+
+process indexingG {
+
+    label 'medMem'
+    label 'medCPU'
+
+    // Define the input: genome file in FASTA format 
+    input:
+    path(genome_fasta_file)
+
+    // Define the output: bowtie index files (differents files, same prefix)
+    output:
+    path "genome_index.*"
+
+    // Execute bowtie-build
+    script: 
+    if(genome_fasta_file ==~ /^http.*/){
+        """
+        wget -q -O reference.fasta ${genome_fasta_file}
+        bowtie-build reference.fasta genome_index
+        """
+    }
+    else {
+        """
+        bowtie-build ${genome_fasta_file} genome_index
+        """
+    }
 }
