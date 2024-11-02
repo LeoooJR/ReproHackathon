@@ -9,6 +9,6 @@ process download {
 
     script:
     """
-    wget -O ${file_name} ${url}
+    wget -O ${file_name} "${url}"
     """
 }
