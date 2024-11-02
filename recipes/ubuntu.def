@@ -1,0 +1,36 @@
+Bootstrap: docker
+
+From: ubuntu:{{ OSVersion }}
+
+%arguments
+	OSVersion=20.04
+
+%help
+
+Ubuntu {{ OSVersion }} container
+
+%labels
+	Recipe.Version 1.0
+	Maintainer leo.jourdain@etu-upsaclay.fr
+
+%post
+	apt-get update && apt-get install -y \
+	wget
+
+%test
+	OS=$(grep ^NAME= /etc/os-release | cut -d '=' -f 2)
+	grep -q NAME=\"Ubuntu\" /etc/os-release
+	if [ $? -eq 0 ]; then
+		echo "Succes: Operating system: ${OS}"
+	else
+		echo "Error: Operating system: ${OS}"
+		exit 1
+	fi
+	OS_VERSION=$(grep ^VERSION_ID= /etc/os-release | cut -d '=' -f 2)
+	grep -q VERSION_ID=\"{{ OSVersion }}\" /etc/os-release
+	if [ $? -eq 0 ]; then
+		echo "Succes: Operating system version: ${OS_VERSION}"
+	else
+		echo "Error: Operating system version: ${OS_VERSION}"
+		exit 1
+	fi
