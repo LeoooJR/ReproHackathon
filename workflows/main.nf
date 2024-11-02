@@ -32,7 +32,7 @@ workflow {
     fastqc(fastq_file)
 
     // Trimming each download FASTQ file
-    trimgalore(fastq_file.map { it[1] })
+    trimmedFASTQ = trimgalore(fastq_file.map { it[1] })
 
     if(params.refg ==~ /^http.*/){
         genome = downloadREF("reference.fasta",params.refg)
@@ -52,7 +52,7 @@ workflow {
     genomeI = indexingG(genome)
 
     // Bowtie Mapping
-    genomeM = mapping(fastq_file.map { it[1] },genomeI)
+    genomeM = mapping(trimmedFASTQ,genomeI)
 
     // FeatureCounts
     featureCounts(genomeM.out.bam,gff)
