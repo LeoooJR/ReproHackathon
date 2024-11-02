@@ -26,6 +26,7 @@ TrimGalore container for trimming sequenced read
 	build-essential \
 	libssl-dev \
 	python3-dev \
+	ca-certificates \
 	perl \
 	unzip \
 	wget \
@@ -41,12 +42,10 @@ TrimGalore container for trimming sequenced read
 	&& make \
 	&& make altinstall \
 	&& cd .. \
-	&& wget -O cutadapt-1.11.tar.gz https://files.pythonhosted.org/packages/47/bf/9045e90dac084a90aa2bb72c7d5aadefaea96a5776f445f5b5d9a7a2c78b/cutadapt-1.11.tar.gz \
-	&& tar -xvzf cutadapt-1.11.tar.gz \
-	&& cd cutadapt-1.11 \
-	&& python3.5 setup.py install --user \
-	&& mv ${HOME}/.local/bin/cutadapt /usr/local/bin
-	&& cd ..
+	&& python3.5 -m ensurepip \
+	&& pip3.5 install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --upgrade pip \
+	&& pip3.5 install cutadapt==1.11
+	
 
 	curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.10.tar.gz -o trim_galore.tar.gz \
 	&& tar -xvzf trim_galore.tar.gz
@@ -72,3 +71,4 @@ TrimGalore container for trimming sequenced read
                 echo "Error: Operating system version: ${OS_VERSION}"
                 exit 1
         fi
+
