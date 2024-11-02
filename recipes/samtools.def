@@ -1,0 +1,31 @@
+Boostrap: ubuntu:{{ OS.Version }}
+
+From: docker
+
+%arguments
+	OS.Version=20.04
+	Samtools.Version=1.21
+%help
+Samtools {{ Samtools.Version }} container
+
+%label
+	Software Samtools
+	Software.version 1.21
+	Container.version 1.0
+	Maintainer leo.jourdain@etu-upsaclay.fr
+
+%environment
+	export PATH=${PATH}:/Samtools/bin
+
+%post
+	apt-get update && apt-get install -y \
+	build-essential \
+	wget \
+	&& wget -O samtools-1.21.tar.bz2  https://github.com/samtools/samtools/releases/download/1.21/samtools-1.21.tar.bz2 \
+	&& tar -zxvf samtools-1.21.tar.bz2 \
+	&& cd samtools-1.21 \
+	&& ./configure --prefix=/Samtools \
+	&& make \
+	&& make install \
+	&& cd ..
+	
