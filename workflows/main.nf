@@ -3,6 +3,7 @@ nextflow.enable.dsl=2
 params.download = true
 params.fastq = "${params.outputDir}/FASTQ"
 params.refg = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=CP000253.1&rettype=fasta"
+params.gff = "https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?db=nuccore&report=gff3&id=CP000253.1"
 
 // Import process
 include { downloadfastq } from './process/downloadfastq.nf'
@@ -10,10 +11,13 @@ include { fastqc } from './process/fastqc.nf'
 include { trimgalore } from './process/trimgalore.nf'
 include { mapping } from './process/bowtie.nf'
 include { indexingG } from './process/bowtie.nf'
+include { featureCounts } from './process/featurecounts.nf'
+include { download as downloadREF } from './process/tools.nf'
+include { download as downloadGFF } from './process/tools.nf'
 
 workflow {
     // List of SRA identifiers to be processed
-    sra_ids = channel.fromList(['SRR10379721','SRR10379722','SRR10379723','SRR10379724','SRR10379725','SRR10379726'])
+    sra_ids = channel.fromList(channel.of('SRR10379721','SRR10379722','SRR10379723','SRR10379724','SRR10379725','SRR10379726').toSortedList())
 
     // Iterate over each SRA identifier
     // Download FASTQ files for the current SRA identifier
@@ -30,10 +34,27 @@ workflow {
     // Trimming each download FASTQ file
     trimgalore(fastq_file.map { it[1] })
 
-    // Bowtie indexing
-    genomeI = indexingG(params.refg)
+    if(params.refg ==~ /^http.*/){
+        genome = downloadREF("reference.fasta",params.refg)
+    }
+    else {
+        genome = params.refg
+    }
 
-    //Bowtie Mapping
+    if(params.gff ==~ /^http.*/){
+        gff = downloadGFF("reference.gff",params.gff)
+    }
+    else {
+        gff = params.gff
+    }
+
+    // Bowtie indexing
+    genomeI = indexingG(genome)
+
+    // Bowtie Mapping
     genomeM = mapping(fastq_file.map { it[1] },genomeI)
+
+    // FeatureCounts
+    featureCounts(genomeM.out.bam,gff)
 
 }

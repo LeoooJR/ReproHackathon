@@ -49,15 +49,7 @@ process indexingG {
 
     // Execute bowtie-build
     script: 
-    if(genome_fasta_file ==~ /^http.*/){
-        """
-        wget -q -O reference.fasta ${genome_fasta_file}
-        bowtie-build reference.fasta genome_index
-        """
-    }
-    else {
         """
         bowtie-build ${genome_fasta_file} genome_index
         """
-    }
 }
