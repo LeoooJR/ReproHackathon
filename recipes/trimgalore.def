@@ -17,7 +17,7 @@ TrimGalore container for trimming sequenced read
 	Maintainer leo.jourdain@etu-upsaclay.fr
 
 %environment
-	export PATH=${PATH}:/FastQC:/TrimGalore-0.6.10:${HOME}/.local/bin/
+	export PATH=${PATH}:/FastQC:/TrimGalore-0.6.10
 
 %post
 	export DEBIAN_FRONTEND=noninteractive
@@ -45,6 +45,7 @@ TrimGalore container for trimming sequenced read
 	&& tar -xvzf cutadapt-1.11.tar.gz \
 	&& cd cutadapt-1.11 \
 	&& python3.5 setup.py install --user \
+	&& mv ${HOME}/.local/bin/cutadapt /usr/local/bin
 	&& cd ..
 
 	curl -fsSL https://github.com/FelixKrueger/TrimGalore/archive/0.6.10.tar.gz -o trim_galore.tar.gz \
