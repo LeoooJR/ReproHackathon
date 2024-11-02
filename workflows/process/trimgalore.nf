@@ -8,20 +8,17 @@
 
  process trimgalore {
 
-    label 'medMem'
-    label 'medCPU'
-
     // Define the input: FASTQ file on which trimgalore will act
     input:
-    path(fastq_file)
+    tuple val(sra_id), path(fastq_file)
 
     // Define the output: Fastq file with trimmed reads
     output: 
-    path "*_trimmed.fq.gz"
+    path "*_trimmed.fastq.gz"
 
     // Execute trimgalore
     script:
     """
-    trim_galore -q 20 --phred33 --length 25 ${fastq_file}
+    cutadapt -q 20 --minimum-length 25 -o ${sra_id}_trimmed.fastq.gz ${fastq_file}
     """
  }

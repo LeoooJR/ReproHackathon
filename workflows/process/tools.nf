@@ -2,7 +2,7 @@ process download {
 
     input:
     val(file_name)
-    path(url)
+    val(url)
 
     output:
     path "${file_name}"

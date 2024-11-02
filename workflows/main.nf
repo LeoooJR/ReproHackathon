@@ -2,8 +2,8 @@ nextflow.enable.dsl=2
 
 params.download = true
 params.fastq = "${params.outputDir}/FASTQ"
-params.refg = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=CP000253.1&rettype=fasta"
-params.gff = "https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?db=nuccore&report=gff3&id=CP000253.1"
+params.refg = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=CP000253.1&rettype=fasta'
+params.gff = 'https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?db=nuccore&report=gff3&id=CP000253.1'
 
 // Import process
 include { downloadfastq } from './process/downloadfastq.nf'
@@ -17,7 +17,7 @@ include { download as downloadGFF } from './process/tools.nf'
 
 workflow {
     // List of SRA identifiers to be processed
-    sra_ids = channel.fromList(channel.of('SRR10379721','SRR10379722','SRR10379723','SRR10379724','SRR10379725','SRR10379726').toSortedList())
+    sra_ids = channel.fromList(['SRR10379721','SRR10379722','SRR10379723','SRR10379724','SRR10379725','SRR10379726'].sort())
 
     // Iterate over each SRA identifier
     // Download FASTQ files for the current SRA identifier
@@ -32,7 +32,7 @@ workflow {
     fastqc(fastq_file)
 
     // Trimming each download FASTQ file
-    trimmedFASTQ = trimgalore(fastq_file.map { it[1] })
+    trimmedFASTQ = trimgalore(fastq_file)
 
     if(params.refg ==~ /^http.*/){
         genome = downloadREF("reference.fasta",params.refg)
