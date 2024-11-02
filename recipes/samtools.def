@@ -1,14 +1,14 @@
-Boostrap: ubuntu:{{ OS.Version }}
+Bootstrap: docker
 
-From: docker
+From: ubuntu:{{ OSVersion }}
 
 %arguments
-	OS.Version=20.04
-	Samtools.Version=1.21
+	OSVersion=20.04
+	SamtoolsVersion=1.21
 %help
-Samtools {{ Samtools.Version }} container
+Samtools {{ SamtoolsVersion }} container
 
-%label
+%labels
 	Software Samtools
 	Software.version 1.21
 	Container.version 1.0
@@ -21,8 +21,14 @@ Samtools {{ Samtools.Version }} container
 	apt-get update && apt-get install -y \
 	build-essential \
 	wget \
+	bzip2 \
+	libncurses5-dev \
+	zlib1g-dev \
+	libbz2-dev \
+	liblzma-dev \
 	&& wget -O samtools-1.21.tar.bz2  https://github.com/samtools/samtools/releases/download/1.21/samtools-1.21.tar.bz2 \
-	&& tar -zxvf samtools-1.21.tar.bz2 \
+	&& bzip2 -d -k samtools-1.21.tar.bz2 \
+	&& tar -xvf samtools-1.21.tar \
 	&& cd samtools-1.21 \
 	&& ./configure --prefix=/Samtools \
 	&& make \
