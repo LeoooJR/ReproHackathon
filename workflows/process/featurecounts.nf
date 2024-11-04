@@ -13,6 +13,8 @@ process featureCounts {
 
     label 'medMem'
     label 'medCPU'
+
+    container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/featurecounts.sif'
     
     // Define the input : path to the bam_files and path to the annotation file
     input:

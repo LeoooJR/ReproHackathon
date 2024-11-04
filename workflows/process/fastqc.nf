@@ -11,6 +11,8 @@ process fastqc {
     label 'lowMem'
     label 'lowCPU'
 
+    container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/fastqc.sif'
+
     publishDir "${params.outputDir}/FASTQC/DEFAULT", mode: 'symlink', pattern: "*_fastqc.*"
 
     // Define the input: a tuple with the sample ID and the path to the FASTQ files

@@ -3,6 +3,8 @@ process samtools {
     label 'medCPU'
     label 'medMem'
 
+    container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/samtools.sif'
+
     input:
     path(bam)
 

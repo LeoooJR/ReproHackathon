@@ -10,6 +10,8 @@ process mapping {
     label 'highMem'
     label 'highCPU'
 
+    container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/bowtie.sif'
+
     // Define the input : gzipped FASTQ files with sequenced reads and the bowtie index 
     input: 
     path(fastq_file)
@@ -37,6 +39,8 @@ process indexingG {
     label 'medMem'
     label 'medCPU'
 
+    container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/bowtie.sif'
+
     // Define the input: genome file in FASTA format 
     input:
     path(genome_fasta_file)
@@ -47,7 +51,7 @@ process indexingG {
 
     // Execute bowtie-build
     script: 
-        """
-        bowtie-build ${genome_fasta_file} genome_index
-        """
+    """
+    bowtie-build ${genome_fasta_file} genome_index
+    """
 }

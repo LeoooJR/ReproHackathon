@@ -1,5 +1,7 @@
 process download {
 
+    container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/ubuntu.sif'
+
     input:
     val(file_name)
     val(url)
