@@ -14,6 +14,7 @@ include { indexingG } from './process/bowtie.nf'
 include { featureCounts } from './process/featurecounts.nf'
 include { download as downloadREF } from './process/tools.nf'
 include { download as downloadGFF } from './process/tools.nf'
+include { samtools } from './process/samtools.nf'
 
 workflow {
     // List of SRA identifiers to be processed
@@ -51,10 +52,16 @@ workflow {
     // Bowtie indexing
     genomeI = indexingG(genome)
 
+    baseNameIndex = genomeI.flatten().first().map{ p -> 
+    p.toString().replaceAll(/(\.\d+\.ebwt|\.rev\.\d+\.ebwt)$/, "")}
+
     // Bowtie Mapping
-    genomeM = mapping(trimmedFASTQ,genomeI)
+    readM = mapping(trimmedFASTQ,baseNameIndex)
+
+    //Samtools
+    samtools(readM)
 
     // FeatureCounts
-    featureCounts(genomeM.out.bam,gff)
+    featureCounts(samtools.out.bamS.collect(),gff)
 
 }

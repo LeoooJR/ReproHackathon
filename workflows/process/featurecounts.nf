@@ -12,7 +12,7 @@
 process featureCounts {
 
     label 'medMem'
-    label 'medCPU'
+    label 'highCPU'
 
     container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/featurecounts.sif'
     

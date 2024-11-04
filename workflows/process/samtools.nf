@@ -1,19 +1,20 @@
 process samtools {
 
-    label 'medCPU'
-    label 'medMem'
+    label 'lowCPU'
+    label 'lowMem'
 
     container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/samtools.sif'
 
     input:
-    path(bam)
+    path(sam)
 
     output:
-    path "${bam.getBaseName()}.bam"
+    path "${sam.simpleName}.sorted.bam", emit: bamS
+    path "${sam.simpleName}.sorted.bam.bai", emit: bamI
 
     script:
     """
-    samtools sort -@ 2 -o ${bam.getBaseName()}.bam ${bam}
-    samtools index  -@ 2 ${bam.getBaseName()}.bam
+    samtools sort -@ ${task.cpus} -o ${sam.simpleName}.sorted.bam ${sam}
+    samtools index  -@ ${task.cpus} ${sam.simpleName}.sorted.bam
     """
 }

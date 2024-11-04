@@ -7,7 +7,7 @@
 
 process mapping {
 
-    label 'highMem'
+    label 'medMem'
     label 'highCPU'
 
     container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/bowtie.sif'
@@ -15,17 +15,16 @@ process mapping {
     // Define the input : gzipped FASTQ files with sequenced reads and the bowtie index 
     input: 
     path(fastq_file)
-    path(bowtie_index_prefix) // use name given to bowtie-build
+    val(bowtie_index_prefix) // use name given to bowtie-build
 
     // Define the output : sorted BAM file and BAM index file
     output: 
-    path "*.bam", emit: bam 
-    path "*.bam.bai", emit: bai 
+    path "*.sam"
 
     // Execute bowtie (mapping)
     script: 
     """
-    bowtie -p $task.cpus -S ${bowtie_index_prefix} <(gunzip -c ${fastq_file})
+    bowtie -p $task.cpus -S ${bowtie_index_prefix} <(gunzip -c ${fastq_file}) > ${fastq_file.simpleName}.sam
     """
 
 }
