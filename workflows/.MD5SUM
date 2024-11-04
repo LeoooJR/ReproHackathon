@@ -1,0 +1,8 @@
+8799ddbb39957c74d3ea577eb44a9e59  ubuntu.sif
+49b614e7e8382f5c40623444176a5ada  trimgalore.sif
+351332a8c04d3fa24ed5b376cfa051e2  sratoolkit.sif
+8226f1b606998a8bc9be91576e04a1f2  samtools.sif
+5e53f8ad5a9c02f33acba5180273a88b  featurecounts.sif
+b0acb10858b49469a5b2a5a9280eef6f  fastqc.sif
+e01183981649840b399144a52b08f05a  bowtie.sif
+db3499c5efb0a48d38bdb61f34867f51  deseq2.sif
