@@ -54,7 +54,14 @@ From: ubuntu:18.04
     rm -rf R-3.4.1*
 
 %environment
+    # Add R binaries to the PATH for easy access
     export PATH=/opt/R/3.4.1/bin:$PATH
+    export R_LIBS_USER=/usr/local/lib/R/site-library
+    export LANG=C.UTF-8
+    export LC_ALL=C.UTF-8
+
+%startscript
+    echo "Container started. To run R, type 'R' or 'Rscript'."
 
 %runscript
     exec R "$@"
