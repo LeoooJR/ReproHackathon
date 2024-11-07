@@ -10,7 +10,7 @@ IMAGES_NAMES=('ubuntu.sif' 'sratoolkit.sif' 'fastqc.sif' 'trimgalore.sif' 'bowti
 IMAGES_PATH=("https://storage.googleapis.com/rrnaseq/ubuntu.sif" "https://storage.googleapis.com/rrnaseq/sratoolkit.sif" \
             "https://storage.googleapis.com/rrnaseq/fastqc.sif" "https://storage.googleapis.com/rrnaseq/trimgalore.sif" \
             "https://storage.googleapis.com/rrnaseq/bowtie.sif" "https://storage.googleapis.com/rrnaseq/samtools.sif" \
-            "https://storage.googleapis.com/rrnaseq/featurecounts.sif" https://storage.googleapis.com/rrnaseq/DESeq2.sif)
+            "https://storage.googleapis.com/rrnaseq/featurecounts.sif" "https://storage.googleapis.com/rrnaseq/DESeq2.sif")
 BUCKET="https://storage.googleapis.com/rrnaseq/"
 MD5SUM_FILE=".MD5SUM"
 PROCESS_FILES=("main.nf" "tools.nf" "downloadfastq.nf" "fastqc.nf" "trimgalore.nf" \
