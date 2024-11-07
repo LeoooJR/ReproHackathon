@@ -27,7 +27,7 @@ process featureCounts {
     // Execute featureCounts with the specified number of threads
     script:
     """
-    featureCounts -T $task.cpus -a ${annotation_file} -o featureCounts.txt ${bam_files}
+    featureCounts --extraAttributes Name -t gene -g ID -F GTF -T $task.cpus -a ${annotation_file} -o featureCounts.txt ${bam_files}
     """
     
 }
