@@ -1,10 +1,9 @@
 <a name="top"></a>
 
-![Nextflow Version](https://img.shields.io/badge/24.10-white?style=for-the-badge&label=Nextflow&labelColor=green)
-![Apptainer Version](https://img.shields.io/badge/1.3.2-white?style=for-the-badge&label=Apptainer&labelColor=blue)
-[![RNASeq](https://img.shields.io/badge/RNASeq-Research-orange?style=for-the-badge)](#)
-[![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](#license)
-
+![Nextflow Version](https://img.shields.io/badge/Nextflow-24.10-brightgreen)
+![Apptainer Version](https://img.shields.io/badge/Apptainer-1.3.2-blue)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/LeoooJR/ReproHackathon/blob/main/LICENSE.md)
+[![GitHub last commit](https://img.shields.io/github/last-commit/LeoooJR/ReproHackathon)](#)
 
 ## 📑 Table of Contents
 - [About](#about)
