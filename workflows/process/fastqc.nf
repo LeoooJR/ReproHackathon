@@ -8,7 +8,6 @@
 
 process fastqc {
 
-    label 'lowMem'
     label 'lowCPU'
 
     container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/fastqc.sif'

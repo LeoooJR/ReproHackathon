@@ -7,6 +7,8 @@
 
 process downloadfastq {
 
+    label 'medCPU'
+
     container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/sratoolkit.sif'
 
     publishDir "${params.outputDir}/FASTQ", mode: 'copy', overwrite: true, pattern: "*.fastq.gz"

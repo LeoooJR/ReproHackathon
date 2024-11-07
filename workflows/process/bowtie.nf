@@ -7,7 +7,6 @@
 
 process mapping {
 
-    label 'lowMem'
     label 'highCPU'
     label 'retry'
 
@@ -36,7 +35,6 @@ process mapping {
 
 process indexingG {
 
-    label 'lowMem'
     label 'medCPU'
 
     container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/bowtie.sif'

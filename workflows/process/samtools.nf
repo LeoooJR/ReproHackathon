@@ -1,8 +1,7 @@
 process samtools {
 
     label 'lowCPU'
-    label 'lowMem'
-
+    
     container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/samtools.sif'
 
     input:
