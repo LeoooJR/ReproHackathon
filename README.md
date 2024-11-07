@@ -36,6 +36,7 @@ Built with [Nextflow](https://www.nextflow.io) and [Apptainer (formerly Singular
 To run the RNASeq pipeline, you need to have the following installed:
 - **Nextflow** `>= 24.10.0`
 - **Apptainer** `>= 1.3.2` 
+- **Minimum requirements** 8 CPUs, 4 Go RAM
 
 ### Installation Instructions
 ```bash
@@ -49,6 +50,7 @@ curl -s https://get.nextflow.io | bash
 # For Apptainer installation, see: https://apptainer.org/docs/getting-started/
 
 # Launch the pipeline
+chmod +x ./workflow.sh
 ./workflow.sh --launch
 ```
 
