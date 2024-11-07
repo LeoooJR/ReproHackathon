@@ -5,4 +5,4 @@
 5e53f8ad5a9c02f33acba5180273a88b  featurecounts.sif
 b0acb10858b49469a5b2a5a9280eef6f  fastqc.sif
 e01183981649840b399144a52b08f05a  bowtie.sif
-db3499c5efb0a48d38bdb61f34867f51  deseq2.sif
+c133e1172fe1b9e86cc1c887836fc9b0  DESeq2.sif
