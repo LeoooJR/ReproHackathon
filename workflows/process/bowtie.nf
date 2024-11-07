@@ -7,8 +7,9 @@
 
 process mapping {
 
-    label 'medMem'
+    label 'lowMem'
     label 'highCPU'
+    label 'retry'
 
     container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/bowtie.sif'
 
@@ -35,7 +36,7 @@ process mapping {
 
 process indexingG {
 
-    label 'medMem'
+    label 'lowMem'
     label 'medCPU'
 
     container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/bowtie.sif'
