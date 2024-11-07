@@ -61,8 +61,8 @@ To start the pipeline, use:
 This project was developed by:
 - [Léo Jourdain](https://github.com/LeoooJR)
 - [Jaffar Gura](https://github.com/Jaffar-Hussein)
-- [Mapathe Faye](https://github.com/Mapathefaye)
-- [Younget Lévy Meliga](https://github.com/lmeliga)
+- [Mapathé Faye](https://github.com/Mapathefaye)
+- [Lévy Meliga Yonguet](https://github.com/lmeliga)
 
 ## 🗨️ Contacts <a name="contacts"></a>
 
