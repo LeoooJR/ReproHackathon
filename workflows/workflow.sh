@@ -191,7 +191,7 @@ case $1 in
         fi
         ;;
     -c|c|--cmd|cmd)
-        echo "nextflow run main.nf -profile ${PROFILE} -c ${CONFIG} --download ${DOWNLOAD} --refg ${REF}"
+        echo -e "nextflow run main.nf -profile ${PROFILE} -c ${CONFIG} --download ${DOWNLOAD} --refg \"${REF}\""
         ;;
     -h|h|--help|help)
         echo "Nextflow pipeline to execute a RNASeq analysis"
