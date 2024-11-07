@@ -1,3 +1,5 @@
+![Static Badge](https://img.shields.io/badge/24.10-white?style=for-the-badge&label=Nextflow&labelColor=green) ![Static Badge](https://img.shields.io/badge/1.3.2-white?style=for-the-badge&label=Apptainer&labelColor=blue)
+
 # **ReproHackaton**
 
 ## **RNASeq Pipeline**
