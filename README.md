@@ -35,7 +35,7 @@ Built with [Nextflow](https://www.nextflow.io) and [Apptainer (formerly Singular
 
 To run the RNASeq pipeline, you need to have the following installed:
 - **Nextflow** `>= 24.10.0`
-- **Apptainer** `>= v1.3.2` 
+- **Apptainer** `>= 1.3.2` 
 
 ### Installation Instructions
 ```sh
