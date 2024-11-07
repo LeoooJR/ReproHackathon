@@ -56,7 +56,7 @@ From: ubuntu:18.04
     cd ..
     rm -rf R-3.4.1*
     
-    # Install DESeq2 and dependencies
+    # Install DESeq2 and old dependencies
      wget https://bioconductor.org/packages/3.5/bioc/src/contrib/BiocInstaller_1.26.1.tar.gz
     /opt/R/{{ R_VERSION }}/bin/R CMD INSTALL BiocInstaller_1.26.1.tar.gz
     
@@ -64,7 +64,6 @@ From: ubuntu:18.04
     
 
 %environment
-    # Add R binaries to the PATH for easy access
     export PATH=/opt/R/3.4.1/bin:$PATH
     export R_LIBS_USER=/usr/local/lib/R/site-library
     export LANG=C.UTF-8
