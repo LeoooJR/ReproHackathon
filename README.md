@@ -38,9 +38,9 @@ To run the RNASeq pipeline, you need to have the following installed:
 - **Apptainer** `>= 1.3.2` 
 
 ### Installation Instructions
-```sh
+```bash
 # Clone this repository
-git clone https://github.com/username/repo.git](https://github.com/LeoooJR/ReproHackathon.git
+git clone https://github.com/LeoooJR/ReproHackathon.git
 cd ReproHackathon
 
 # Set up Apptainer/Nextflow if not already installed
