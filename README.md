@@ -2,6 +2,13 @@
 
 ![Nextflow Version](https://img.shields.io/badge/Nextflow-24.10-brightgreen)
 ![Apptainer Version](https://img.shields.io/badge/Apptainer-1.3.2-blue)
+![Bowtie Version](https://img.shields.io/badge/Bowtie-0.12.7-lightgrey)
+![DESeq2 Version](https://img.shields.io/badge/DESeq2-1.16.1-purple)
+![SRA Toolkit Version](https://img.shields.io/badge/SRA%20Toolkit-3.1.1-green)
+![Trim Galore Version](https://img.shields.io/badge/Trim%20Galore-0.6.10-teal)
+![FastQC Version](https://img.shields.io/badge/FastQC-0.12.1-blue)
+![featureCounts Version](https://img.shields.io/badge/featureCounts-1.4.6-orange)
+![Samtools Version](https://img.shields.io/badge/Samtools-1.21-red)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/LeoooJR/ReproHackathon/blob/main/LICENSE.md)
 [![GitHub last commit](https://img.shields.io/github/last-commit/LeoooJR/ReproHackathon)](#)
 
