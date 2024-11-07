@@ -1,5 +1,5 @@
 <a name="top"></a>
-
+# ReproHackathon RNASeq Pipeline
 ![Nextflow Version](https://img.shields.io/badge/Nextflow-24.10-brightgreen)
 ![Apptainer Version](https://img.shields.io/badge/Apptainer-1.3.2-blue)
 ![Bowtie Version](https://img.shields.io/badge/Bowtie-0.12.7-lightgrey)
