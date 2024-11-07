@@ -13,14 +13,17 @@
 - [Contributors](#contributors)
 - [Contacts](#contacts)
 
+
 ## 🧬 About <a name="about"></a>
 
-**ReproHackathon RNASeq Pipeline** is a collaborative project developed during the ReproHackathon. This RNASeq analysis pipeline, built with [Nextflow](https://www.nextflow.io) and [Apptainer (formerly Singularity)](https://apptainer.org), is designed for reproducible research on the **Staphylococcus aureus** RNASeq dataset under antibiotic stress.
+**ReproHackathon RNASeq Pipeline** aims to reproduce findings from [*Peyrusson et al.* (Nature Communications, 2020)](https://www.nature.com/articles/s41467-020-15966-7) on the transcriptomic profile of *Staphylococcus aureus* persisters under antibiotic stress. This study highlights how *S. aureus* persisters—cells that tolerate antibiotics without genetic resistance—may contribute to therapeutic failures by acting as reservoirs for recurring infections. Unlike resistant bacteria, persisters adopt a reversible, non-growing state within host cells, possibly due to growth arrest or active stress response mechanisms.
+
+Built with [Nextflow](https://www.nextflow.io) and [Apptainer (formerly Singularity)](https://apptainer.org), this pipeline uses RNA-Seq to study transcriptomic changes and identify factors influencing antibiotic persistence and tolerance. It includes genome mapping, read counting, and differential expression analysis to capture the complex adaptation of *S. aureus* under stress. Key transcriptomic insights from the study include the activation of responses like the stringent response, cell wall stress, SOS, and heat shock responses, which together promote antibiotic tolerance across multiple drug classes.
 
 ### Key Features
 - **High Reproducibility**: Leveraging containers and Nextflow ensures easy deployment and consistent results across systems.
 - **Data Analysis**: Includes genome mapping, read counting, and statistical analysis to identify differentially expressed genes (DEGs).
-- **Modular Workflow**: Nextflow's flexible design allows for easy customization and expansion of the pipeline.
+- **Modular Workflow**: Nextflow's flexible design allows for easy customization and expansion of the pipeline. The apptainer images are also modulairzed and already built and hosted in the cloud.
 
 ## 🔧 Setup and Installation <a name="setup-and-installation"></a>
 
