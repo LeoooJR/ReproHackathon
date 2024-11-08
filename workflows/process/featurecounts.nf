@@ -4,7 +4,7 @@
  * Run the featureCounts tool in order to quantify aligned reads in BAM files
  * using a GTF annotation file
  * Input : - BAM files containing sequencing alignements 
- *         - GTF file for genomic annotation
+ *         - GFF file for genomic annotation
  * Output : - TXT file containing the counting of reads for each gene 
  */
 
@@ -27,7 +27,7 @@ process featureCounts {
     // Execute featureCounts with the specified number of threads
     script:
     """
-    featureCounts --extraAttributes Name -t gene -g ID -F GTF -T $task.cpus -a ${annotation_file} -o featureCounts.txt ${bam_files}
+    featureCounts -t gene -g ID -F GFF -T $task.cpus -a ${annotation_file} -o featureCounts.txt ${bam_files}
     """
     
 }
