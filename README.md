@@ -36,7 +36,7 @@ Built with [Nextflow](https://www.nextflow.io) and [Apptainer (formerly Singular
 ### Requirements
 - **Nextflow** `v24.10.0+`
 - **Apptainer** `v1.3.2+`
-- **Hardware**: 8 cores & 4 GB RAM minimum
+- **Hardware**: 8 cores & 8 GB RAM minimum
 
 ### Installation Instructions
 ```bash
