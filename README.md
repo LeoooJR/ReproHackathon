@@ -11,6 +11,7 @@
 [![Samtools Version](https://img.shields.io/badge/Samtools-1.21-red)](http://www.htslib.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/LeoooJR/ReproHackathon/blob/main/LICENSE.md)
 [![GitHub last commit](https://img.shields.io/github/last-commit/LeoooJR/ReproHackathon)](#)
+[![Reproducibility](https://img.shields.io/badge/Crucial-Reproducibility-orange)]()
 
 ## 📑 Table of Contents
 - [About](#about)
