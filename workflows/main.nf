@@ -15,6 +15,7 @@ include { featureCounts } from './process/featurecounts.nf'
 include { download as downloadREF } from './process/tools.nf'
 include { download as downloadGFF } from './process/tools.nf'
 include { samtools } from './process/samtools.nf'
+include { deseq2 } from './process/deseq2.nf'
 
 workflow {
     // List of SRA identifiers to be processed
@@ -59,6 +60,9 @@ workflow {
     samtools(readM)
 
     // FeatureCounts
-    featureCounts(samtools.out.bamS.collect(),gff)
+    countT = featureCounts(samtools.out.bamS.collect(),gff)
+
+    // DESeq2
+    //deseq2(counT)
 
 }
