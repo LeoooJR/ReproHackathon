@@ -8,7 +8,7 @@
 
  process trimgalore {
 
-   container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/trimgalore.sif'
+   container ''
 
     // Define the input: FASTQ file on which trimgalore will act
     input:

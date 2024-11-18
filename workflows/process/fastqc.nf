@@ -10,7 +10,7 @@ process fastqc {
 
     label 'lowCPU'
 
-    container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/fastqc.sif'
+    container ''
 
     publishDir "${params.outputDir}/FASTQC/DEFAULT", mode: 'symlink', pattern: "*_fastqc.*"
 

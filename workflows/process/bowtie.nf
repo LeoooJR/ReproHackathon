@@ -10,12 +10,12 @@ process mapping {
     label 'highCPU'
     label 'retry'
 
-    container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/bowtie.sif'
+    container ''
 
     // Define the input : gzipped FASTQ files with sequenced reads and the bowtie index 
     input: 
     path(fastq_file)
-    val(bowtie_index_prefix) // use name given to bowtie-build
+    path(bowtie_index_files) // use name given to bowtie-build
 
     // Define the output : sorted BAM file and BAM index file
     output: 
@@ -24,7 +24,7 @@ process mapping {
     // Execute bowtie (mapping)
     script: 
     """
-    bowtie -p $task.cpus -S ${bowtie_index_prefix} <(gunzip -c ${fastq_file}) > ${fastq_file.simpleName}.sam
+    bowtie -p $task.cpus -S genome_index <(gunzip -c ${fastq_file}) > ${fastq_file.simpleName}.sam
     """
 
 }
@@ -37,7 +37,7 @@ process indexingG {
 
     label 'medCPU'
 
-    container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/bowtie.sif'
+    container ''
 
     // Define the input: genome file in FASTA format 
     input:

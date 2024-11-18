@@ -2,7 +2,7 @@ process samtools {
 
     label 'lowCPU'
     
-    container '/ifb/data/mydatalocal/Next/ReproHackathon/recipes/samtools.sif'
+    container ''
 
     input:
     path(sam)

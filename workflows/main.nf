@@ -52,11 +52,8 @@ workflow {
     // Bowtie indexing
     genomeI = indexingG(genome)
 
-    baseNameIndex = genomeI.flatten().first().map{ p -> 
-    p.toString().replaceAll(/(\.\d+\.ebwt|\.rev\.\d+\.ebwt)$/, "")}
-
     // Bowtie Mapping
-    readM = mapping(trimmedFASTQ,baseNameIndex)
+    readM = mapping(trimmedFASTQ,genomeI)
 
     //Samtools
     samtools(readM)
