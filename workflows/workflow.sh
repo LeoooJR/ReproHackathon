@@ -179,6 +179,18 @@ case $1 in
             ((++ERROR))
         fi
 
+        # Is Apptainer binary available ?
+        echo -e "${STATE_ANSI}STATE${RESET_ANSI}: checking apptainer availability..."
+        which apptainer > /dev/null
+        if [ $? -eq 0 ]; then
+            echo -e "BINARY: apptainer ... ${SUCCESS_ANSI}yes${RESET_ANSI}"
+            ((++SUCCESS))
+        else
+            echo -e "BINARY: apptainer ... ${ERROR_ANSI}no${RESET_ANSI}" \
+            && echo -e "${ERROR_ANSI}ERROR${RESET_ANSI}: apptainer binary not found: cannot launch pipeline"
+            ((++ERROR))
+        fi
+
         # Launch Nextflow Pipeline
         echo -e "SUMMARY: ${SUCCESS} ${SUCCESS_ANSI}success(es)${RESET_ANSI}, ${WARNING} ${WARNING_ANSI}warning(s)${RESET_ANSI}, ${ERROR} ${ERROR_ANSI}error(s)${RESET_ANSI}"
         if [ ${ERROR} -eq 0 ]; then
