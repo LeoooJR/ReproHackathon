@@ -56,13 +56,13 @@ workflow {
     // Bowtie Mapping
     readM = mapping(trimmedFASTQ,genomeI)
 
-    //Samtools
+    // Samtools
     samtools(readM)
 
     // FeatureCounts
     countT = featureCounts(samtools.out.bamS.collect(),gff)
 
     // DESeq2
-    //deseq2(counT)
+    //deseq2(countT)
 
 }

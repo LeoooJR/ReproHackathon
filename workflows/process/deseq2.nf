@@ -14,6 +14,6 @@ process deseq2 {
 
     script:
     """
-    Rscript ${projectDir}/scripts/DESeq2.R
+    Rscript /scripts/DESeq2.R
     """
 }
