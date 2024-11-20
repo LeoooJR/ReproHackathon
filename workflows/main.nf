@@ -7,7 +7,8 @@ params.gff = 'https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?db=nuccore&report=
 
 // Import process
 include { downloadfastq } from './process/downloadfastq.nf'
-include { fastqc } from './process/fastqc.nf'
+include { fastqcBT } from './process/fastqc.nf'
+include { fastqcAT } from './process/fastqc.nf'
 include { trimgalore } from './process/trimgalore.nf'
 include { mapping } from './process/bowtie.nf'
 include { indexingG } from './process/bowtie.nf'
@@ -31,10 +32,13 @@ workflow {
     }
 
     // Run FastQC on each downloaded FASTQ file
-    fastqc(fastq_file)
+    fastqcBT(fastq_file)
 
     // Trimming each download FASTQ file
     trimmedFASTQ = trimgalore(fastq_file)
+
+    // Run FastQC on each trimmed FASTQ file
+    fastqcAT((trimmedFASTQ.getBaseName(),trimmedFASTQ))
 
     if(params.refg ==~ /^http.*/){
         genome = downloadREF("reference.fasta",params.refg)
@@ -63,6 +67,6 @@ workflow {
     countT = featureCounts(samtools.out.bamS.collect(),gff)
 
     // DESeq2
-    //deseq2(countT)
+    deseq2(countT)
 
 }

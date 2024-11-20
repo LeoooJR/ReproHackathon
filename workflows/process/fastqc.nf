@@ -12,7 +12,7 @@ process fastqc {
 
     container ''
 
-    publishDir "${params.outputDir}/FASTQC/DEFAULT", mode: 'symlink', pattern: "*_fastqc.*"
+    publishDir "${params.outputDir}/FASTQC", mode: 'symlink', pattern: "*_fastqc.*"
 
     // Define the input: a tuple with the sample ID and the path to the FASTQ files
     input:
