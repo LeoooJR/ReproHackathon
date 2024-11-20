@@ -12,7 +12,7 @@ library(ggplot2)
 exp_data <- read.table(file = "featureCounts.txt",header = T)
 
 # Information table about genes from NCTC8325 strain
-gene_inf_data <- read.table(file = "GeneSpecificInformation_NCTC8325.tsv", sep = "\t",header = T, na.strings = "", fill = T)
+gene_inf_data <- read.table(file = "/scripts/GeneSpecificInformation_NCTC8325.tsv", sep = "\t",header = T, na.strings = "", fill = T)
 
 gene_inf_data <- gene_inf_data[-nrow(gene_inf_data),]
 
