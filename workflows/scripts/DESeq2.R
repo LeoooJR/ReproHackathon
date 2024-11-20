@@ -4,6 +4,12 @@ library(DESeq2)
 
 library(ggplot2)
 
+if(!require(EnrichmentBrowser)){
+  BiocManager::install(pkgs = "EnrichmentBrowser")
+}
+
+library(EnrichmentBrowser)
+
 # ---------------- #
 
 # ----- DATA ----- #
@@ -16,8 +22,8 @@ gene_inf_data <- read.table(file = "/scripts/GeneSpecificInformation_NCTC8325.ts
 
 gene_inf_data <- gene_inf_data[-nrow(gene_inf_data),]
 
-# Remove rows with NA values
-gene_inf_data <- na.exclude(gene_inf_data)
+# Remove rows with NA values in Gene.ID columns
+gene_inf_data <- gene_inf_data[-which(is.na(x = gene_inf_data$Gene.ID)),]
 
 # ---------------- #
 
@@ -39,9 +45,6 @@ cnts <- cnts[,order(colnames(cnts))]
 # Clean rows names
 rownames(cnts) <- vapply(rownames(cnts), function(x) substr(x, start = 6, stop = nchar(x)), character(1))
 
-# Keep exp genes with informations available in information matrix
-cnts <- cnts[which(rownames(cnts) %in% gene_inf_data$locus.tag),]
-
 # Remove genes with no expression in all samples
 cnts <- cnts[apply(cnts,1,sum) > 0,]
 
@@ -53,6 +56,15 @@ dds <- DESeq(dds)
 
 res <- results(dds, independentFiltering = TRUE, pAdjustMethod = "BH")
 
+# Add BaseMean statistiques columns
+cnts["logBaseMean"] <- log2(res$baseMean)
+
+# Add LogFoldChange statistiques columns
+cnts["logFC"] <- res$log2FoldChange
+
+# Add adjusted p-value statistiques columns
+cnts["padj"] <- res$padj
+
 # Create MA Plot
 jpeg(filename = "MA-Plot_of_complete_RNA-seq_dataset.jpg")
 
@@ -61,3 +73,71 @@ plotMA(res, main = "MA-Plot of complete RNA-seq dataset", colNonSig = "black", c
 dev.off()
 
 # ---------------- #
+
+# --- Enrichment --- #
+
+# Get sao genome sets from KEGG
+gene_set <- EnrichmentBrowser::getGenesets(org = "sao", db = "kegg")
+
+# Genes related to translation
+translation_genes <- c(gene_set$sao03010_Ribosome,gene_set$`sao00970_Aminoacyl-tRNA_biosynthesis`)
+
+gene_2_id <- gene_inf_data$Gene.ID
+
+names(gene_2_id) <- gene_inf_data$locus.tag
+
+# Keep counting with meta-informations available
+cnts_translation <- cnts[which(rownames(cnts) %in% names(gene_2_id)),]
+
+gene_2_id <- gene_2_id[rownames(cnts_translation)]
+
+sum(names(gene_2_id) == rownames(cnts_translation))
+
+# Keep counting which are in genes translation set
+cnts_translation <- cnts_translation[which(gene_2_id[rownames(cnts_translation)] %in% translation_genes),]
+
+gene_2_id <- gene_2_id[rownames(cnts_translation)]
+
+# Add genes id columns
+cnts_translation["Gene.ID"] <- gene_2_id
+
+# DataFrame used for plotting
+plot_data <- cnts_translation[,c("logBaseMean","logFC","padj","Gene.ID")]
+
+# Significance colums by adjusted p-value
+plot_data["Significance"] = ifelse(plot_data$padj < 0.05, "Significant", "Not Significant")
+
+# Translation pathway columns
+plot_data["Translation"] <- ifelse(plot_data$Gene.ID %in% gene_set$`sao00970_Aminoacyl-tRNA_biosynthesis`,"AA-tRNA_synthetase","Ribosome")
+
+# Color used for significance plotting
+p_color <- ifelse(plot_data$Significance == "Significant", "red", "grey")
+
+# Create the plot
+ggplot(plot_data, aes(x = logBaseMean, y = logFC)) +
+  geom_point(aes(color = p_color), shape = 21, fill = NA) +  # Base points
+  geom_point(data = subset(plot_data, Translation == "AA-tRNA_synthetase"), 
+             shape = 21, 
+             size = 3, 
+             color = "black") +  # Black contour for tRNA-synthetase
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +  # Horizontal line at 0
+  scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, by = 2)) +
+  scale_y_continuous(limits = c(-6, 5), breaks = seq(-6, 5, by = 1)) +
+  labs(
+    title = "MA-Plot of Genes Related to Translation",  # Adjusted title
+    x = "Log2 Base Mean",
+    y = "Log2 Fold Change",
+    color = "Significance"  # Legend for significance
+  ) +
+  scale_color_manual(
+    values = c("grey" = "grey", "red" = "red"),  # Specify actual colors for significance
+    labels = c("grey" = "Non-significant", "red" = "Significant")  # Legend labels
+  ) +
+  theme_minimal() +  # Clean theme
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")  # Center and bold title
+  ) +
+  guides(
+    color = guide_legend(title = "Legend", 
+                         override.aes = list(shape = 21, size = 3))  # Adjust legend appearance
+  )
