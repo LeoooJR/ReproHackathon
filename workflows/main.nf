@@ -8,8 +8,8 @@ params.gff = 'https://www.ncbi.nlm.nih.gov/sviewer/viewer.cgi?db=nuccore&report=
 
 // Import process
 include { downloadfastq } from './process/downloadfastq.nf'
-include { fastqcBT } from './process/fastqc.nf'
-include { fastqcAT } from './process/fastqc.nf'
+include { fastqc as fastqcBT } from './process/fastqc.nf'
+include { fastqc as fastqcAT } from './process/fastqc.nf'
 include { trimgalore } from './process/trimgalore.nf'
 include { mapping } from './process/bowtie.nf'
 include { indexingG } from './process/bowtie.nf'
