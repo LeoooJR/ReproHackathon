@@ -4,8 +4,10 @@ library(DESeq2)
 
 library(ggplot2)
 
+library(BiocInstaller)
+
 if(!require(EnrichmentBrowser)){
-  BiocManager::install(pkgs = "EnrichmentBrowser")
+  biocLite("EnrichmentBrowser", ask=FALSE, suppressUpdates=TRUE, suppressAutoUpdate=TRUE, dependencies=TRUE, type="source")
 }
 
 library(EnrichmentBrowser)
@@ -141,3 +143,5 @@ ggplot(plot_data, aes(x = logBaseMean, y = logFC)) +
     color = guide_legend(title = "Legend", 
                          override.aes = list(shape = 21, size = 3))  # Adjust legend appearance
   )
+
+# ----------------- #
