@@ -4,12 +4,6 @@ library(DESeq2)
 
 library(ggplot2)
 
-library(BiocInstaller)
-
-if(!require(EnrichmentBrowser)){
-  biocLite("EnrichmentBrowser", ask=FALSE, suppressUpdates=TRUE, suppressAutoUpdate=TRUE, dependencies=TRUE, type="source")
-}
-
 library(EnrichmentBrowser)
 
 # ---------------- #
@@ -79,29 +73,19 @@ dev.off()
 # --- Enrichment --- #
 
 # Get sao genome sets from KEGG
-gene_set <- EnrichmentBrowser::getGenesets(org = "sao", db = "kegg")
+gene_set <- get.kegg.genesets(download.kegg.pathways("sao"))
 
 # Genes related to translation
 translation_genes <- c(gene_set$sao03010_Ribosome,gene_set$`sao00970_Aminoacyl-tRNA_biosynthesis`)
 
-gene_2_id <- gene_inf_data$Gene.ID
-
-names(gene_2_id) <- gene_inf_data$locus.tag
-
 # Keep counting with meta-informations available
-cnts_translation <- cnts[which(rownames(cnts) %in% names(gene_2_id)),]
-
-gene_2_id <- gene_2_id[rownames(cnts_translation)]
-
-sum(names(gene_2_id) == rownames(cnts_translation))
+cnts_translation <- cnts[which(rownames(cnts) %in% gene_inf_data$locus.tag),]
 
 # Keep counting which are in genes translation set
-cnts_translation <- cnts_translation[which(gene_2_id[rownames(cnts_translation)] %in% translation_genes),]
-
-gene_2_id <- gene_2_id[rownames(cnts_translation)]
+cnts_translation <- cnts_translation[which(rownames(cnts_translation) %in% translation_genes),]
 
 # Add genes id columns
-cnts_translation["Gene.ID"] <- gene_2_id
+cnts_translation["Gene.ID"] <- gene_inf_data$Gene.ID[which(gene_inf_data$locus.tag %in% rownames(cnts_translation))]
 
 # DataFrame used for plotting
 plot_data <- cnts_translation[,c("logBaseMean","logFC","padj","Gene.ID")]

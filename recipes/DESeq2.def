@@ -60,7 +60,7 @@ From: ubuntu:18.04
      wget https://bioconductor.org/packages/3.5/bioc/src/contrib/BiocInstaller_1.26.1.tar.gz
     /opt/R/{{ R_VERSION }}/bin/R CMD INSTALL BiocInstaller_1.26.1.tar.gz
     
-    /opt/R/{{ R_VERSION }}/bin/Rscript -e 'library(BiocInstaller);options(repos = c(CRAN = "https://packagemanager.posit.co/cran/2017-10-10"));biocLite("DESeq2", ask=FALSE, suppressUpdates=TRUE, suppressAutoUpdate=TRUE, dependencies=TRUE, type="source")'
+    /opt/R/{{ R_VERSION }}/bin/Rscript -e 'library(BiocInstaller);options(repos = c(CRAN = "https://packagemanager.posit.co/cran/2017-10-10"));biocLite("DESeq2", ask=FALSE, suppressUpdates=TRUE, suppressAutoUpdate=TRUE, dependencies=TRUE, type="source");biocLite("EnrichmentBrowser", ask=FALSE, suppressUpdates=TRUE, suppressAutoUpdate=TRUE, dependencies=TRUE, type="source")'
     
 
 %environment

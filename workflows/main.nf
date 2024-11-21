@@ -1,5 +1,6 @@
 nextflow.enable.dsl=2
 
+// Parameters
 params.download = true
 params.fastq = "${params.outputDir}/FASTQ"
 params.refg = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=CP000253.1&rettype=fasta'
@@ -18,6 +19,7 @@ include { download as downloadGFF } from './process/tools.nf'
 include { samtools } from './process/samtools.nf'
 include { deseq2 } from './process/deseq2.nf'
 
+// Workflow
 workflow {
     // List of SRA identifiers to be processed
     sra_ids = channel.fromList(['SRR10379721','SRR10379722','SRR10379723','SRR10379724','SRR10379725','SRR10379726'].sort())
