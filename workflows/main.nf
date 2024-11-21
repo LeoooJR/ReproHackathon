@@ -40,7 +40,7 @@ workflow {
     trimmedFASTQ = trimgalore(fastq_file)
 
     // Run FastQC on each trimmed FASTQ file
-    fastqcAT((trimmedFASTQ.getBaseName(),trimmedFASTQ))
+    fastqcAT(trimmedFASTQ.map { file -> [file.getBaseName(), file] })
 
     if(params.refg ==~ /^http.*/){
         genome = downloadREF("reference.fasta",params.refg)
