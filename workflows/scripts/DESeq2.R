@@ -115,6 +115,8 @@ plot_data["Translation"] <- ifelse(plot_data$Gene.ID %in% gene_set$`sao00970_Ami
 # Color used for significance plotting
 p_color <- ifelse(plot_data$Significance == "Significant", "red", "grey")
 
+jpeg(filename = "MA-Plot_of_genes_related_to_translation.jpg")
+
 # Create the plot
 ggplot(plot_data, aes(x = logBaseMean, y = logFC)) +
   geom_point(aes(color = p_color), shape = 21, fill = NA) +  # Base points
@@ -143,5 +145,7 @@ ggplot(plot_data, aes(x = logBaseMean, y = logFC)) +
     color = guide_legend(title = "Legend", 
                          override.aes = list(shape = 21, size = 3))  # Adjust legend appearance
   )
+
+dev.off()
 
 # ----------------- #
