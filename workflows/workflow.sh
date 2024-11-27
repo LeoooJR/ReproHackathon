@@ -6,15 +6,16 @@ CONFIG=./config/nextflow.config
 DOWNLOAD=true
 REF="https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nuccore&id=CP000253.1&rettype=fasta"
 GFF=""
-IMAGES_NAMES=('ubuntu.sif' 'sratoolkit.sif' 'fastqc.sif' 'trimgalore.sif' 'bowtie.sif' 'samtools.sif' 'featurecounts.sif' 'DESeq2.sif')
+IMAGES_NAMES=('ubuntu.sif' 'sratoolkit.sif' 'fastqc.sif' 'trimgalore.sif' 'bowtie.sif' 'samtools.sif' 'featurecounts.sif' 'DESeq2.sif' 'multiqc.sif')
 IMAGES_PATH=("https://storage.googleapis.com/rrnaseq/ubuntu.sif" "https://storage.googleapis.com/rrnaseq/sratoolkit.sif" \
             "https://storage.googleapis.com/rrnaseq/fastqc.sif" "https://storage.googleapis.com/rrnaseq/trimgalore.sif" \
             "https://storage.googleapis.com/rrnaseq/bowtie.sif" "https://storage.googleapis.com/rrnaseq/samtools.sif" \
-            "https://storage.googleapis.com/rrnaseq/featurecounts.sif" "https://storage.googleapis.com/rrnaseq/DESeq2.sif")
+            "https://storage.googleapis.com/rrnaseq/featurecounts.sif" "https://storage.googleapis.com/rrnaseq/DESeq2.sif" \
+            "https://storage.googleapis.com/rrnaseq/multiqc.sif")
 BUCKET="https://storage.googleapis.com/rrnaseq/"
 MD5SUM_FILE=".MD5SUM"
 PROCESS_FILES=("main.nf" "tools.nf" "downloadfastq.nf" "fastqc.nf" "trimgalore.nf" \
-            "bowtie.nf" "samtools.nf" "featurecounts.nf" "deseq2.nf")
+            "bowtie.nf" "samtools.nf" "featurecounts.nf" "deseq2.nf" "multiqc.nf")
 PROCESS_DIR="process"
 CONFIG_FILE="nextflow.config"
 NEXTFLOW_DEV_VERSION="24.10"

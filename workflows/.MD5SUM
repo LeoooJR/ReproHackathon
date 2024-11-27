@@ -6,3 +6,4 @@
 b0acb10858b49469a5b2a5a9280eef6f  fastqc.sif
 e01183981649840b399144a52b08f05a  bowtie.sif
 c0f12b882505a739f902ce5deb9f713c  DESeq2.sif
+93da993f77b444147804f484edbc9dda  multiqc.sif

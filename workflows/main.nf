@@ -11,6 +11,7 @@ include { downloadfastq } from './process/downloadfastq.nf'
 include { fastqc as fastqcBT } from './process/fastqc.nf'
 include { fastqc as fastqcAT } from './process/fastqc.nf'
 include { trimgalore } from './process/trimgalore.nf'
+include { multiqc } from './process/multiqc.nf'
 include { mapping } from './process/bowtie.nf'
 include { indexingG } from './process/bowtie.nf'
 include { featureCounts } from './process/featurecounts.nf'
@@ -41,6 +42,9 @@ workflow {
 
     // Run FastQC on each trimmed FASTQ file
     fastqcAT(trimmedFASTQ.map { file -> [file.getSimpleName(), file] })
+
+    // Run MultiQC to generate a summary report
+    multiqc(fastqcBT.out.zip.collect(),fastqcAT.out.zip.collect())
 
     if(params.refg ==~ /^http.*/){
         genome = downloadREF("reference.fasta",params.refg)
