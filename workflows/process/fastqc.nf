@@ -19,9 +19,9 @@ process fastqc {
     // Define the output: the FastQC HTML report and ZIP file for each sample
     output:
     // Emit the FastQC HTML report with the sample ID
-    path("${sample_id}_fastqc.html"), emit: report   
+    path("${sample_id}*_fastqc.html"), emit: report   
     // Emit the FastQC ZIP archive with the sample ID
-    path("${sample_id}_fastqc.zip"), emit: zip       
+    path("${sample_id}*_fastqc.zip"), emit: zip       
 
     //Execute FastQC with the specified number of threads and output directory
     script:

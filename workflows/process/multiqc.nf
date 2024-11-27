@@ -4,7 +4,7 @@ process multiqc {
     
     container ''
     
-    publishDir "${params.outputDir}/multiqc", mode: 'symlink', pattern: "multiqc_report.html"
+    publishDir "${params.outputDir}/MULTIQC", mode: 'symlink', pattern: "multiqc_report.html"
         
     input:
     path(fastqcBT)
