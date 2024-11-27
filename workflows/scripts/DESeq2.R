@@ -61,10 +61,43 @@ cnts["logFC"] <- res$log2FoldChange
 # Add adjusted p-value statistiques columns
 cnts["padj"] <- res$padj
 
+# Add pvalue statistiques columns
+cnts["pvalue"] <- res$pvalue
+
 # Create MA Plot
 jpeg(filename = "MA-Plot_of_complete_RNA-seq_dataset.jpg")
 
 plotMA(res, main = "MA-Plot of complete RNA-seq dataset", colNonSig = "black", colSig = "red", lty = 2)
+
+jpeg(filename = "Volcano-Plot_of_complete_RNA-seq_dataset.jpg")
+
+ggplot(cnts, aes(x = logFC, y = -log10(pvalue), color = ifelse(padj < 0.05, "Significant", "Not Significant"))) +
+  geom_point(alpha = 0.6, size = 1.5) +
+  scale_color_manual(values = c("Not Significant" = "grey", "Significant" = "red")) +
+  theme_minimal() +
+  labs(
+    title = "Volcano Plot of complete RNA-seq dataset",
+    x = "log2(Fold Change)",
+    y = "-log10(p-value)"
+  ) +
+  theme(
+    legend.title = element_blank(),
+    plot.title = element_text(hjust = 0.5)
+  )
+
+# Variance Stabilizing Transformation
+vsd <- vst(dds, blind = TRUE)
+pca_data <- plotPCA(vsd, intgroup = "cond", returnData = TRUE)
+
+jpeg(filename = "PCA-Plot_of_complete_RNA-seq_dataset.jpg")
+
+# Plot PCA
+ggplot(pca_data, aes(PC1, PC2, color = cond)) +
+  geom_point(size = 3) +
+  theme_minimal() +
+  labs(title = "PCA of RNA-Seq Data",
+       x = paste0("PC1: ", round(100 * attr(pca_data, "percentVar")[1], 1), "% variance"),
+       y = paste0("PC2: ", round(100 * attr(pca_data, "percentVar")[2], 1), "% variance"))
 
 dev.off()
 
