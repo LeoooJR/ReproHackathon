@@ -1,5 +1,3 @@
-#!/usr/bin/env nextflow
-
 /**
  * Define the FastQC process, responsible for running quality control on FASTQ files
  * It takes FASTQ files as input and generates a quality report in HTML format 

@@ -1,5 +1,3 @@
-#!/usr/bin/env nextflow 
-
 /**
  * Run the featureCounts tool in order to quantify aligned reads in BAM files
  * using a GTF annotation file

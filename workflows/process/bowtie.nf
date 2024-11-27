@@ -1,5 +1,3 @@
-#!/usr/bin/env nextflow
-
 /**
  * This process uses bowtie to map reads to a reference genome.
  */

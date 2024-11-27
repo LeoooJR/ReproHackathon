@@ -1,4 +1,3 @@
-#!/usr/bin/env nextflow
 /**
  * This process downloads sequencing data from the SRA (Sequence Read Archive) 
  * using the fasterq-dump tool from the SRA Toolkit. The downloaded data 
