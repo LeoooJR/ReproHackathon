@@ -1,0 +1,41 @@
+Bootstrap: docker
+
+From: ubuntu:{{ OSVersion }}
+
+%arguments
+    OSVersion=20.04
+    Python=3.13.0
+    MultiQC=1.25.2
+
+%help
+
+MultiQC {{ MultiQC }} container for quality check
+
+%labels
+    Software MultiQC
+    Software.version
+    Recipe.Version 1.0
+    Maintainer leo.jourdain@etu-upsaclay.fr
+
+%post
+    apt-get update && apt-get install -y \
+    build-essential \
+    zlib1g-dev \
+    libncurses5-dev \
+    libgdbm-dev \
+    libnss3-dev \
+    libssl-dev \
+    libreadline-dev \
+    libffi-dev \
+    libbz2-dev \
+    wget
+
+    wget https://www.python.org/ftp/python/{{ Python }}/Python-{{ Python }}.tgz \
+    && tar -xf Python-{{ Python }}.tgz \
+    && cd Python-{{ Python }} \
+    && ./configure --enable-optimizations \
+    && make install \
+    && python3 -m ensurepip \
+    && pip3 install multiqc=={{ MultiQC }}
+
+%test
