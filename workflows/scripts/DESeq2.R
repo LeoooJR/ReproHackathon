@@ -69,6 +69,8 @@ jpeg(filename = "MA-Plot_of_complete_RNA-seq_dataset.jpg")
 
 plotMA(res, main = "MA-Plot of complete RNA-seq dataset", colNonSig = "black", colSig = "red", lty = 2)
 
+dev.off()
+
 jpeg(filename = "Volcano-Plot_of_complete_RNA-seq_dataset.jpg")
 
 ggplot(cnts, aes(x = logFC, y = -log10(pvalue), color = ifelse(padj < 0.05, "Significant", "Not Significant"))) +
@@ -81,9 +83,14 @@ ggplot(cnts, aes(x = logFC, y = -log10(pvalue), color = ifelse(padj < 0.05, "Sig
     y = "-log10(p-value)"
   ) +
   theme(
-    legend.title = element_blank(),
-    plot.title = element_text(hjust = 0.5)
+    plot.title = element_text(hjust = 0.5, face = "bold")  # Center and bold title
+  ) +
+  guides(
+    color = guide_legend(title = "Pvalue", 
+                         override.aes = list(size = 3))  # Adjust legend appearance
   )
+
+dev.off()
 
 # Variance Stabilizing Transformation
 vsd <- vst(dds, blind = TRUE)
@@ -97,7 +104,15 @@ ggplot(pca_data, aes(PC1, PC2, color = cond)) +
   theme_minimal() +
   labs(title = "PCA of RNA-Seq Data",
        x = paste0("PC1: ", round(100 * attr(pca_data, "percentVar")[1], 1), "% variance"),
-       y = paste0("PC2: ", round(100 * attr(pca_data, "percentVar")[2], 1), "% variance"))
+       y = paste0("PC2: ", round(100 * attr(pca_data, "percentVar")[2], 1), "% variance")) +
+  theme_minimal() +  # Clean theme
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")  # Center and bold title
+  ) +
+  guides(
+    color = guide_legend(title = "Experimental conditions",
+                         override.aes = list(size = 3))  # Adjust legend appearance
+  )
 
 dev.off()
 
@@ -136,7 +151,7 @@ jpeg(filename = "MA-Plot_of_genes_related_to_translation.jpg")
 
 # Create the plot
 ggplot(plot_data, aes(x = logBaseMean, y = logFC)) +
-  geom_point(aes(color = p_color), shape = 21, fill = NA) +  # Base points
+  geom_point(aes(color = p_color), shape = 21, fill = p_color) +  # Base points
   geom_point(data = subset(plot_data, Translation == "AA-tRNA_synthetase"), 
              shape = 21, 
              size = 3, 
@@ -159,8 +174,8 @@ ggplot(plot_data, aes(x = logBaseMean, y = logFC)) +
     plot.title = element_text(hjust = 0.5, face = "bold")  # Center and bold title
   ) +
   guides(
-    color = guide_legend(title = "Legend", 
-                         override.aes = list(shape = 21, size = 3))  # Adjust legend appearance
+    color = guide_legend(title = "Adjusted Pvalue", 
+                         override.aes = list(size = 3, fill = c("grey", "red")))  # Adjust legend appearance
   )
 
 dev.off()
