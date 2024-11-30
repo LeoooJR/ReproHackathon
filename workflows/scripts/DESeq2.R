@@ -6,6 +6,29 @@ library(ggplot2)
 
 library(EnrichmentBrowser)
 
+library(pheatmap)
+
+# ---------------- #
+
+# --- FUNCTION --- #
+
+pathway <- function(genes,pathSet){
+  res <- c()
+  for (gene in genes) {
+    index <- 1
+    while (index <= length(pathSet) && !(as.character(gene) %in% pathSet[[index]])) {
+      index <- index + 1
+    }
+    if(index > length(gene_set)){
+      res <- c(res,"NA")  
+    }
+    else {
+      res <- c(res,substr(names(pathSet)[index],10,nchar(names(pathSet)[index])))
+    }
+  }
+  return(res)
+}
+
 # ---------------- #
 
 # ----- DATA ----- #
@@ -20,6 +43,9 @@ gene_inf_data <- gene_inf_data[-nrow(gene_inf_data),]
 
 # Remove rows with NA values in Gene.ID columns
 gene_inf_data <- gene_inf_data[-which(is.na(x = gene_inf_data$Gene.ID)),]
+
+# Get sao genome sets from KEGG
+gene_set <- get.kegg.genesets(download.kegg.pathways("sao"))
 
 # ---------------- #
 
@@ -50,7 +76,17 @@ dds <- DESeqDataSetFromMatrix(cnts, DataFrame(cond), ~ cond)
 # DESeq analyse
 dds <- DESeq(dds)
 
+# Get Results from DESeq2
 res <- results(dds, independentFiltering = TRUE, pAdjustMethod = "BH")
+
+# Update colnames about samples
+names(cnts) <- paste0(sapply((strsplit(colnames(cnts),"_")),"[[",1),"_DEFAULT")
+
+# Bind normalized counts to the DataFrame
+cnts <- cbind(cnts,as.data.frame(counts(dds, normalized = TRUE)))
+
+# Update colnames about samples
+names(cnts)[7:ncol(cnts)] <- paste0(sapply((strsplit(colnames(cnts)[7:ncol(cnts)],"_")),"[[",1),"_NORM")
 
 # Add BaseMean statistiques columns
 cnts["logBaseMean"] <- log2(res$baseMean)
@@ -64,6 +100,12 @@ cnts["padj"] <- res$padj
 # Add pvalue statistiques columns
 cnts["pvalue"] <- res$pvalue
 
+# Add significance column
+cnts["significance"] <- ifelse(cnts$padj < 0.05, "Significant", "Not Significant")
+
+# Add pathway column
+cnts["pathway"] <- pathway(rownames(cnts),gene_set)
+
 # Create MA Plot
 jpeg(filename = "MA-Plot_of_complete_RNA-seq_dataset.jpg")
 
@@ -73,7 +115,8 @@ dev.off()
 
 jpeg(filename = "Volcano-Plot_of_complete_RNA-seq_dataset.jpg")
 
-ggplot(cnts, aes(x = logFC, y = -log10(pvalue), color = ifelse(padj < 0.05, "Significant", "Not Significant"))) +
+# Create Volcano Plot
+ggplot(cnts, aes(x = logFC, y = -log10(pvalue), color = significance)) +
   geom_point(alpha = 0.6, size = 1.5) +
   scale_color_manual(values = c("Not Significant" = "grey", "Significant" = "red")) +
   theme_minimal() +
@@ -112,71 +155,135 @@ ggplot(pca_data, aes(PC1, PC2, color = cond)) +
   guides(
     color = guide_legend(title = "Experimental conditions",
                          override.aes = list(size = 3))  # Adjust legend appearance
-  )
+  ) +
+  scale_color_discrete(name = "Conditions", labels = c("Control","Intracellular persister"))
+
+dev.off()
+
+# Heatmap
+
+jpeg(filename = "Heatmap_of_DEG_RNA-seq_dataset.jpg",width = 1200, height = 1400)
+
+pheatmap(log2(na.exclude(cnts[cnts$significance == "Significant",7:12]) + 1),
+         scale = "row",                     # Normalize rows (genes) for better visualization
+         clustering_distance_rows = "euclidean",
+         clustering_distance_cols = "euclidean",
+         clustering_method = "complete",
+         annotation_col = data.frame(conditions = ifelse(cond == 1, "Control","Intracellular persister"),row.names = colnames(cnts[,7:12])), # Add sample condition annotations
+         annotation_row = data.frame(pathway = cnts[cnts$significance == "Significant",]$pathway,row.names = rownames(cnts[cnts$significance == "Significant",])), # Add pathway annotations if available
+         show_rownames = FALSE,              # Show gene names
+         show_colnames = TRUE,              # Show sample names
+         fontsize_row = 5,                  # Adjust row font size if needed
+         fontsize_col = 8,                  # Adjust column font size
+         color = colorRampPalette(c("blue", "white", "red"))(50),
+         main = "DEG Heatmap")  # Color gradient
 
 dev.off()
 
 # ---------------- #
 
-# --- Enrichment --- #
-
-# Get sao genome sets from KEGG
-gene_set <- get.kegg.genesets(download.kegg.pathways("sao"))
+# --- Translation Pathway --- #
 
 # Genes related to translation
-translation_genes <- c(gene_set$sao03010_Ribosome,gene_set$`sao00970_Aminoacyl-tRNA_biosynthesis`)
+# translation_genes <- c(gene_set$sao03010_Ribosome,gene_set$`sao00970_Aminoacyl-tRNA_biosynthesis`)
+
+cnts_translation <- cnts[cnts$pathway == "Ribosome" | cnts$pathway == "Aminoacyl-tRNA_biosynthesis",]
 
 # Keep counting with meta-informations available
-cnts_translation <- cnts[which(rownames(cnts) %in% gene_inf_data$locus.tag),]
+# cnts_translation <- cnts[which(rownames(cnts) %in% gene_inf_data$locus.tag),]
 
 # Keep counting which are in genes translation set
-cnts_translation <- cnts_translation[which(rownames(cnts_translation) %in% translation_genes),]
+# cnts_translation <- cnts_translation[which(rownames(cnts_translation) %in% translation_genes),]
 
 # Add genes id columns
 cnts_translation["Gene.ID"] <- gene_inf_data$Gene.ID[which(gene_inf_data$locus.tag %in% rownames(cnts_translation))]
 
 # DataFrame used for plotting
-plot_data <- cnts_translation[,c("logBaseMean","logFC","padj","Gene.ID")]
+# plot_data <- cnts_translation[,c("logBaseMean","logFC","padj","Gene.ID")]
 
 # Significance colums by adjusted p-value
-plot_data["Significance"] = ifelse(plot_data$padj < 0.05, "Significant", "Not Significant")
+# plot_data["Significance"] = ifelse(plot_data$padj < 0.05, "Significant", "Not Significant")
 
 # Translation pathway columns
-plot_data["Translation"] <- ifelse(plot_data$Gene.ID %in% gene_set$`sao00970_Aminoacyl-tRNA_biosynthesis`,"AA-tRNA_synthetase","Ribosome")
+# plot_data["Translation"] <- ifelse(plot_data$Gene.ID %in% gene_set$`sao00970_Aminoacyl-tRNA_biosynthesis`,"AA-tRNA_synthetase","Ribosome")
 
 # Color used for significance plotting
-p_color <- ifelse(plot_data$Significance == "Significant", "red", "grey")
+# p_color <- ifelse(plot_data$Significance == "Significant", "red", "grey")
 
 jpeg(filename = "MA-Plot_of_genes_related_to_translation.jpg")
 
-# Create the plot
-ggplot(plot_data, aes(x = logBaseMean, y = logFC)) +
-  geom_point(aes(color = p_color), shape = 21, fill = p_color) +  # Base points
-  geom_point(data = subset(plot_data, Translation == "AA-tRNA_synthetase"), 
-             shape = 21, 
-             size = 3, 
-             color = "black") +  # Black contour for tRNA-synthetase
+ggplot(cnts_translation, aes(x = logBaseMean, y = logFC)) +
+  geom_point(aes(color = ifelse(cnts_translation$pathway == "Aminoacyl-tRNA_biosynthesis","black","white"), fill = ifelse(cnts_translation$significance == "Significant","red","grey")), shape = 21) +  # Base points
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +  # Horizontal line at 0
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, by = 2)) +
   scale_y_continuous(limits = c(-6, 5), breaks = seq(-6, 5, by = 1)) +
   labs(
-    title = "MA-Plot of Genes Related to Translation",  # Adjusted title
+    title = "MA-Plot of genes related to translation",  # Adjusted title
     x = "Log2 Base Mean",
     y = "Log2 Fold Change",
-    color = "Significance"  # Legend for significance
+    color = "Pathway"  # Legend for significance
   ) +
   scale_color_manual(
-    values = c("grey" = "grey", "red" = "red"),  # Specify actual colors for significance
-    labels = c("grey" = "Non-significant", "red" = "Significant")  # Legend labels
+    values = c("white" = "white", "black" = "black"),  # Specify actual colors for significance
+    labels = c("white" = "Ribosome", "black" = "Aminoacyl-tRNA_biosynthesis")  # Legend labels
   ) +
+  scale_fill_manual(
+    values = c("grey" = "grey", "red" = "red"),
+    labels = c("grey" = "Non-significant", "red" = "Significant")) +
   theme_minimal() +  # Clean theme
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold")  # Center and bold title
   ) +
   guides(
-    color = guide_legend(title = "Adjusted Pvalue", 
-                         override.aes = list(size = 3, fill = c("grey", "red")))  # Adjust legend appearance
+    fill = guide_legend(title = "Adjusted Pvalue", 
+                         override.aes = list(size = 3, fill = c("grey", "red"), color = "white")),  # Adjust legend appearance
+    color = guide_legend(title = "Translation",
+                         override.aes = list(size = 3, color = c("black", "white")))
   )
+
+dev.off()
+
+# PCA Plot
+
+# Variance Stabilizing Transformation
+vsd_translation <- vsd[rownames(vsd) %in% rownames(cnts_translation), ]
+
+# Recalculate PCA
+pca_data_translation <- plotPCA(vsd_translation, intgroup = "cond", returnData = TRUE)
+
+jpeg(filename = "PCA-Plot_of_Translation_RNA-seq_dataset.jpg")
+
+# Plot
+ggplot(pca_data_translation, aes(PC1, PC2, color = cond)) +
+  geom_point(size = 3) +
+  labs(title = "PCA for Translation Pathway",
+       x = paste0("PC1: ", round(100 * attr(pca_data_translation, "percentVar")[1], 1), "% variance"),
+       y = paste0("PC2: ", round(100 * attr(pca_data_translation, "percentVar")[2], 1), "% variance")) +
+  scale_color_discrete(name = "Conditions", labels = c("Control","Intracellular persister")) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold")  # Center and bold title
+  )
+
+dev.off()
+
+# Heatmap for DEG in translation pathway
+
+jpeg(filename = "Heatmap_of_DEG_Translation_RNA-seq_dataset.jpg",width = 1200, height = 1400)
+
+pheatmap(log2(cnts_translation[cnts_translation$significance == "Significant",7:12] + 1),
+         scale = "row",                     # Normalize rows (genes) for better visualization
+         clustering_distance_rows = "euclidean",
+         clustering_distance_cols = "euclidean",
+         clustering_method = "complete",
+         annotation_col = data.frame(conditions = ifelse(cond == 1, "Control","Intracellular persister"),row.names = colnames(cnts_translation[,7:12])), # Add sample condition annotations
+         annotation_row = data.frame(pathway = cnts_translation[(cnts_translation$significance == "Significant"),]$pathway,row.names = rownames(cnts_translation[(cnts_translation$significance == "Significant"),])), # Add pathway annotations if available
+         show_rownames = FALSE,              # Show gene names
+         show_colnames = TRUE,              # Show sample names
+         fontsize_row = 6,                  # Adjust row font size if needed
+         fontsize_col = 8,                  # Adjust column font size
+         color = colorRampPalette(c("blue", "white", "red"))(50),
+         main = "DEG Translation Heatmap")  # Color gradient
 
 dev.off()
 
