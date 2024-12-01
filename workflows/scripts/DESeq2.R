@@ -107,13 +107,13 @@ cnts["significance"] <- ifelse(cnts$padj < 0.05, "Significant", "Not Significant
 cnts["pathway"] <- pathway(rownames(cnts),gene_set)
 
 # Create MA Plot
-jpeg(filename = "MA-Plot_of_complete_RNA-seq_dataset.jpg")
+jpeg(filename = "MA-Plot_of_complete_RNA-seq_dataset.jpg",width = 1000, height = 1000)
 
 plotMA(res, main = "MA-Plot of complete RNA-seq dataset", colNonSig = "black", colSig = "red", lty = 2)
 
 dev.off()
 
-jpeg(filename = "Volcano-Plot_of_complete_RNA-seq_dataset.jpg")
+jpeg(filename = "Volcano-Plot_of_complete_RNA-seq_dataset.jpg",width = 1000, height = 1000)
 
 # Create Volcano Plot
 ggplot(cnts, aes(x = logFC, y = -log10(pvalue), color = significance)) +
@@ -139,9 +139,9 @@ dev.off()
 vsd <- vst(dds, blind = TRUE)
 pca_data <- plotPCA(vsd, intgroup = "cond", returnData = TRUE)
 
-jpeg(filename = "PCA-Plot_of_complete_RNA-seq_dataset.jpg")
+jpeg(filename = "PCA-Plot_of_complete_RNA-seq_dataset.jpg",width = 1000, height = 1000)
 
-# Plot PCA
+# Plot PCA by samples conditions
 ggplot(pca_data, aes(PC1, PC2, color = cond)) +
   geom_point(size = 3) +
   theme_minimal() +
@@ -157,6 +157,31 @@ ggplot(pca_data, aes(PC1, PC2, color = cond)) +
                          override.aes = list(size = 3))  # Adjust legend appearance
   ) +
   scale_color_discrete(name = "Conditions", labels = c("Control","Intracellular persister"))
+
+dev.off()
+
+# PCA by genes
+
+pca_res <- prcomp(na.exclude(cnts[cnts$significance == "Significant" & cnts$pathway != "NA",7:12]), scale. = TRUE)
+pca_array <- cbind(data.frame(pca_res$x),pathway = cnts[cnts$significance == "Significant" & cnts$pathway != "NA",]$pathway)
+
+jpeg(filename = "PCA-Plot_of_DEG_RNA-seq_dataset.jpg",width = 1000, height = 1000)
+
+ggplot(pca_array, aes(x = as.numeric(PC1), y = as.numeric(PC2), color = pathway)) +
+  geom_point(size = 3, alpha = 0.8) + # Plot genes
+  labs(
+    title = "PCA of Gene Expression",
+    x = paste0("PC1 (", round(100 * summary(pca_res)$importance[2, 1], 1), "% variance)"),
+    y = paste0("PC2 (", round(100 * summary(pca_res)$importance[2, 2], 1), "% variance)")
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    legend.position = "right",
+    legend.title = element_text(size = 10, face = "bold"),  # Reduce legend title size
+    legend.text = element_text(size = 5),   # Reduce legend text size
+    legend.key.size = unit(0.5, "cm")    
+  )
 
 dev.off()
 
@@ -210,7 +235,7 @@ cnts_translation["Gene.ID"] <- gene_inf_data$Gene.ID[which(gene_inf_data$locus.t
 # Color used for significance plotting
 # p_color <- ifelse(plot_data$Significance == "Significant", "red", "grey")
 
-jpeg(filename = "MA-Plot_of_genes_related_to_translation.jpg")
+jpeg(filename = "MA-Plot_of_genes_related_to_translation.jpg",width = 1000, height = 1000)
 
 ggplot(cnts_translation, aes(x = logBaseMean, y = logFC)) +
   geom_point(aes(color = ifelse(cnts_translation$pathway == "Aminoacyl-tRNA_biosynthesis","black","white"), fill = ifelse(cnts_translation$significance == "Significant","red","grey")), shape = 21) +  # Base points
@@ -251,7 +276,7 @@ vsd_translation <- vsd[rownames(vsd) %in% rownames(cnts_translation), ]
 # Recalculate PCA
 pca_data_translation <- plotPCA(vsd_translation, intgroup = "cond", returnData = TRUE)
 
-jpeg(filename = "PCA-Plot_of_Translation_RNA-seq_dataset.jpg")
+jpeg(filename = "PCA-Plot_of_Translation_RNA-seq_dataset.jpg",width = 1000, height = 1000)
 
 # Plot
 ggplot(pca_data_translation, aes(PC1, PC2, color = cond)) +
@@ -263,6 +288,52 @@ ggplot(pca_data_translation, aes(PC1, PC2, color = cond)) +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold")  # Center and bold title
+  )
+
+dev.off()
+
+# PCA for DEG in translation pathway
+
+pca_res_trans <- prcomp(na.exclude(cnts[cnts$significance == "Significant" & (cnts$pathway == "Ribosome" | cnts$pathway == "Aminoacyl-tRNA_biosynthesis") ,7:12]), scale. = TRUE)
+pca_array_trans <- cbind(data.frame(pca_res_trans$x),pathway = cnts[cnts$significance == "Significant" & (cnts$pathway == "Ribosome" | cnts$pathway == "Aminoacyl-tRNA_biosynthesis"),]$pathway)
+
+jpeg(filename = "PCA-Plot_of_DEG_Translation_RNA-seq_dataset.jpg",width = 1000, height = 1000)
+
+ggplot(pca_array_trans, aes(x = as.numeric(PC1), y = as.numeric(PC2), color = pathway)) +
+  geom_point(size = 3, alpha = 0.8) + # Plot genes
+  labs(
+    title = "PCA of Gene Expression",
+    x = paste0("PC1 (", round(100 * summary(pca_res)$importance[2, 1], 1), "% variance)"),
+    y = paste0("PC2 (", round(100 * summary(pca_res)$importance[2, 2], 1), "% variance)")
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    legend.position = "right",
+    legend.title = element_text(size = 10, face = "bold"),  # Reduce legend title size
+    legend.text = element_text(size = 8),   # Reduce legend text size
+    legend.key.size = unit(0.5, "cm")    
+  )
+
+dev.off()
+
+jpeg(filename = "PCA-Plot_of_DEG_Translation_RNA-seq_dataset_Facet.jpg",width = 1000, height = 1000)
+
+ggplot(pca_array_trans, aes(x = as.numeric(PC1), y = as.numeric(PC2), color = pathway)) +
+  geom_point(size = 3, alpha = 0.8) + # Plot genes
+  facet_wrap(~ pathway, scales = "free", ncol = 3) +
+  labs(
+    title = "PCA of Gene Expression",
+    x = paste0("PC1 (", round(100 * summary(pca_res)$importance[2, 1], 1), "% variance)"),
+    y = paste0("PC2 (", round(100 * summary(pca_res)$importance[2, 2], 1), "% variance)")
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    legend.position = "right",
+    legend.title = element_text(size = 10, face = "bold"),  # Reduce legend title size
+    legend.text = element_text(size = 8),   # Reduce legend text size
+    legend.key.size = unit(0.5, "cm")    
   )
 
 dev.off()
