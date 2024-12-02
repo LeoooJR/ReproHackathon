@@ -1,0 +1,15 @@
+GeneID	Gene	Function	BRITE
+SAOUHSC_02274	ABCF3	ATP-binding protein	Translation factors
+SAOUHSC_02489	infA	translation initiation factor IF-1	Translation factors
+SAOUHSC_01246	infB	translation initiation factor IF-2	Translation factors
+SAOUHSC_01786	infC	translation initiation factor IF-3	Translation factors
+SAOUHSC_01234	tsf	elongation factor Ts	Translation factors
+SAOUHSC_00530	tuf	elongation factor Tu	Translation factors
+SAOUHSC_00529	fusA	elongation factor G	Translation factors
+SAOUHSC_01625	efp	elongation factor P	Translation factors
+SAOUHSC_02359	prfA	peptide chain release factor 1	Translation factors
+SAOUHSC_00771	prfB	peptide chain release factor 2	Translation factors
+SAOUHSC_00956	prfC	peptide chain release factor 3	Translation factors
+SAOUHSC_01236	frr	ribosome recycling factor	Translation factors
+SAOUHSC_02358	HemK	family modification methylase	Translation factors
+SAOUHSC_00475	PTH1	peptidyl-tRNA hydrolase	Translation factors

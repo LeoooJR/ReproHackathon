@@ -47,6 +47,9 @@ gene_inf_data <- gene_inf_data[-which(is.na(x = gene_inf_data$Gene.ID)),]
 # Get sao genome sets from KEGG
 gene_set <- get.kegg.genesets(download.kegg.pathways("sao"))
 
+# Get gene translation factors
+gene_translation_factors <- read.table(file = "/scripts/GeneSpecificInformation_SAO_TranslationFactors.tsv",header = T,sep = "\t")
+
 # ---------------- #
 
 # ---- DESeq2 ---- #
@@ -105,6 +108,9 @@ cnts["significance"] <- ifelse(cnts$padj < 0.05, "Significant", "Not Significant
 
 # Add pathway column
 cnts["pathway"] <- pathway(rownames(cnts),gene_set)
+
+# Add translation factors
+cnts[as.character(gene_translation_factors$GeneID),"pathway"] <- "Translation factors"
 
 # Create MA Plot
 jpeg(filename = "MA-Plot_of_complete_RNA-seq_dataset.jpg",width = 1000, height = 1000)
@@ -212,7 +218,7 @@ dev.off()
 # Genes related to translation
 # translation_genes <- c(gene_set$sao03010_Ribosome,gene_set$`sao00970_Aminoacyl-tRNA_biosynthesis`)
 
-cnts_translation <- cnts[cnts$pathway == "Ribosome" | cnts$pathway == "Aminoacyl-tRNA_biosynthesis",]
+cnts_translation <- cnts[cnts$pathway == "Ribosome" | cnts$pathway == "Aminoacyl-tRNA_biosynthesis" | cnts$pathway == "Translation factors",]
 
 # Keep counting with meta-informations available
 # cnts_translation <- cnts[which(rownames(cnts) %in% gene_inf_data$locus.tag),]
@@ -250,7 +256,7 @@ ggplot(cnts_translation, aes(x = logBaseMean, y = logFC)) +
   ) +
   scale_color_manual(
     values = c("white" = "white", "black" = "black"),  # Specify actual colors for significance
-    labels = c("white" = "Ribosome", "black" = "Aminoacyl-tRNA_biosynthesis")  # Legend labels
+    labels = c("white" = "Ribosome / Translation Factors", "black" = "Aminoacyl-tRNA_biosynthesis")  # Legend labels
   ) +
   scale_fill_manual(
     values = c("grey" = "grey", "red" = "red"),
@@ -294,8 +300,8 @@ dev.off()
 
 # PCA for DEG in translation pathway
 
-pca_res_trans <- prcomp(na.exclude(cnts[cnts$significance == "Significant" & (cnts$pathway == "Ribosome" | cnts$pathway == "Aminoacyl-tRNA_biosynthesis") ,7:12]), scale. = TRUE)
-pca_array_trans <- cbind(data.frame(pca_res_trans$x),pathway = cnts[cnts$significance == "Significant" & (cnts$pathway == "Ribosome" | cnts$pathway == "Aminoacyl-tRNA_biosynthesis"),]$pathway)
+pca_res_trans <- prcomp(na.exclude(cnts_translation[cnts_translation$significance == "Significant",7:12]), scale. = TRUE)
+pca_array_trans <- cbind(data.frame(pca_res_trans$x),pathway = cnts_translation[cnts_translation$significance == "Significant",]$pathway)
 
 jpeg(filename = "PCA-Plot_of_DEG_Translation_RNA-seq_dataset.jpg",width = 1000, height = 1000)
 
