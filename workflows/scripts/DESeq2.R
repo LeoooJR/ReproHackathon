@@ -117,6 +117,10 @@ jpeg(filename = "MA-Plot_of_complete_RNA-seq_dataset.jpg",width = 1000, height =
 
 plotMA(res, main = "MA-Plot of complete RNA-seq dataset", colNonSig = "black", colSig = "red", lty = 2)
 
+# Add a legend
+legend("bottomleft", legend = c("Significant", "Non-significant"), 
+       col = c("red", "black"), pch = c(16, 16), bty = "n")
+
 dev.off()
 
 jpeg(filename = "Volcano-Plot_of_complete_RNA-seq_dataset.jpg",width = 1000, height = 1000)
@@ -171,7 +175,7 @@ dev.off()
 pca_res <- prcomp(na.exclude(cnts[cnts$significance == "Significant" & cnts$pathway != "NA",7:12]), scale. = TRUE)
 pca_array <- cbind(data.frame(pca_res$x),pathway = cnts[cnts$significance == "Significant" & cnts$pathway != "NA",]$pathway)
 
-jpeg(filename = "PCA-Plot_of_DEG_RNA-seq_dataset.jpg",width = 1000, height = 1000)
+jpeg(filename = "PCA-Plot_of_DEG_RNA-seq_dataset.jpg",width = 1200, height = 1000)
 
 ggplot(pca_array, aes(x = as.numeric(PC1), y = as.numeric(PC2), color = pathway)) +
   geom_point(size = 3, alpha = 0.8) + # Plot genes
@@ -184,8 +188,8 @@ ggplot(pca_array, aes(x = as.numeric(PC1), y = as.numeric(PC2), color = pathway)
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold"),
     legend.position = "right",
-    legend.title = element_text(size = 10, face = "bold"),  # Reduce legend title size
-    legend.text = element_text(size = 5),   # Reduce legend text size
+    legend.title = element_text(size = 15, face = "bold"),  # Reduce legend title size
+    legend.text = element_text(size = 10),   # Reduce legend text size
     legend.key.size = unit(0.5, "cm")    
   )
 
@@ -224,7 +228,7 @@ cnts_translation["Gene.ID"] <- gene_inf_data$Gene.ID[which(gene_inf_data$locus.t
 jpeg(filename = "MA-Plot_of_genes_related_to_translation.jpg",width = 1000, height = 1000)
 
 ggplot(cnts_translation, aes(x = logBaseMean, y = logFC)) +
-  geom_point(aes(color = ifelse(cnts_translation$pathway == "Aminoacyl-tRNA_biosynthesis","black","white"), fill = ifelse(cnts_translation$significance == "Significant","red","grey")), shape = 21) +  # Base points
+  geom_point(aes(color = ifelse(cnts_translation$pathway == "Aminoacyl-tRNA_biosynthesis","black","white"), fill = ifelse(cnts_translation$significance == "Significant","red","grey")), shape = 21, size = 3) +  # Base points
   geom_hline(yintercept = 0, linetype = "dashed", color = "black") +  # Horizontal line at 0
   scale_x_continuous(limits = c(0, 20), breaks = seq(0, 20, by = 2)) +
   scale_y_continuous(limits = c(-6, 5), breaks = seq(-6, 5, by = 1)) +
@@ -243,7 +247,10 @@ ggplot(cnts_translation, aes(x = logBaseMean, y = logFC)) +
     labels = c("grey" = "Non-significant", "red" = "Significant")) +
   theme_minimal() +  # Clean theme
   theme(
-    plot.title = element_text(hjust = 0.5, face = "bold")  # Center and bold title
+    plot.title = element_text(hjust = 0.5, face = "bold"),  # Center and bold title
+    legend.title = element_text(size=15, face = "bold"),
+    legend.text = element_text(size=10),
+    legend.key.size = unit(2, 'cm')
   ) +
   guides(
     fill = guide_legend(title = "Adjusted Pvalue", 
@@ -266,14 +273,17 @@ jpeg(filename = "PCA-Plot_of_Translation_RNA-seq_dataset.jpg",width = 1000, heig
 
 # Plot
 ggplot(pca_data_translation, aes(PC1, PC2, color = cond)) +
-  geom_point(size = 3) +
+  geom_point(size = 4) +
   labs(title = "PCA for Translation Pathway",
        x = paste0("PC1: ", round(100 * attr(pca_data_translation, "percentVar")[1], 1), "% variance"),
        y = paste0("PC2: ", round(100 * attr(pca_data_translation, "percentVar")[2], 1), "% variance")) +
   scale_color_discrete(name = "Conditions", labels = c("Control","Intracellular persister")) +
   theme_minimal() +
   theme(
-    plot.title = element_text(hjust = 0.5, face = "bold")  # Center and bold title
+    plot.title = element_text(hjust = 0.5, face = "bold"),  # Center and bold title
+    legend.title = element_text(size=15, face = "bold"),
+    legend.text = element_text(size=10),
+    legend.key.size = unit(2, 'cm')
   )
 
 dev.off()
@@ -289,15 +299,15 @@ ggplot(pca_array_trans, aes(x = as.numeric(PC1), y = as.numeric(PC2), color = pa
   geom_point(size = 3, alpha = 0.8) + # Plot genes
   labs(
     title = "PCA of Gene Expression",
-    x = paste0("PC1 (", round(100 * summary(pca_res)$importance[2, 1], 1), "% variance)"),
-    y = paste0("PC2 (", round(100 * summary(pca_res)$importance[2, 2], 1), "% variance)")
+    x = paste0("PC1 (", round(100 * summary(pca_res_trans)$importance[2, 1], 1), "% variance)"),
+    y = paste0("PC2 (", round(100 * summary(pca_res_trans)$importance[2, 2], 1), "% variance)")
   ) +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold"),
     legend.position = "right",
-    legend.title = element_text(size = 10, face = "bold"),  # Reduce legend title size
-    legend.text = element_text(size = 8),   # Reduce legend text size
+    legend.title = element_text(size = 15, face = "bold"),  # Reduce legend title size
+    legend.text = element_text(size = 10),   # Reduce legend text size
     legend.key.size = unit(0.5, "cm")    
   )
 
@@ -310,15 +320,15 @@ ggplot(pca_array_trans, aes(x = as.numeric(PC1), y = as.numeric(PC2), color = pa
   facet_wrap(~ pathway, scales = "free", ncol = 3) +
   labs(
     title = "PCA of Gene Expression",
-    x = paste0("PC1 (", round(100 * summary(pca_res)$importance[2, 1], 1), "% variance)"),
-    y = paste0("PC2 (", round(100 * summary(pca_res)$importance[2, 2], 1), "% variance)")
+    x = paste0("PC1 (", round(100 * summary(pca_re_trans)$importance[2, 1], 1), "% variance)"),
+    y = paste0("PC2 (", round(100 * summary(pca_res_trans)$importance[2, 2], 1), "% variance)")
   ) +
   theme_minimal() +
   theme(
     plot.title = element_text(hjust = 0.5, face = "bold"),
     legend.position = "right",
-    legend.title = element_text(size = 10, face = "bold"),  # Reduce legend title size
-    legend.text = element_text(size = 8),   # Reduce legend text size
+    legend.title = element_text(size = 15, face = "bold"),  # Reduce legend title size
+    legend.text = element_text(size = 10),   # Reduce legend text size
     legend.key.size = unit(0.5, "cm")    
   )
 
