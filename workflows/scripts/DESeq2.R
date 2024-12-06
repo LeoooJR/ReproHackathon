@@ -160,7 +160,10 @@ ggplot(pca_data, aes(PC1, PC2, color = cond)) +
        y = paste0("PC2: ", round(100 * attr(pca_data, "percentVar")[2], 1), "% variance")) +
   theme_minimal() +  # Clean theme
   theme(
-    plot.title = element_text(hjust = 0.5, face = "bold")  # Center and bold title
+    plot.title = element_text(hjust = 0.5, face = "bold"),  # Center and bold title
+    legend.title = element_text(size=15, face = "bold"),
+    legend.text = element_text(size=10),
+    legend.key.size = unit(2, 'cm')
   ) +
   guides(
     color = guide_legend(title = "Experimental conditions",
