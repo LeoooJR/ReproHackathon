@@ -1,4 +1,4 @@
-# --- Packages --- #
+# --- PACKAGES --- #
 
 library(DESeq2)
 
@@ -52,7 +52,7 @@ gene_translation_factors <- read.table(file = "/scripts/GeneSpecificInformation_
 
 # ---------------- #
 
-# ---- DESeq2 ---- #
+# ---- DIFFERENTIAL ANALYSIS ---- #
 
 # Set experimental conditions
 # Condition 1 : Control replicate / Condition 2 : Intracellular persister replicate
@@ -191,7 +191,7 @@ ggplot(pca_array, aes(x = as.numeric(PC1), y = as.numeric(PC2), color = pathway)
 
 dev.off()
 
-# Heatmap
+# HEATMAP
 
 jpeg(filename = "Heatmap_of_DEG_RNA-seq_dataset.jpg",width = 1200, height = 1400)
 
@@ -211,35 +211,15 @@ pheatmap(log2(na.exclude(cnts[cnts$significance == "Significant",7:12]) + 1),
 
 dev.off()
 
-# ---------------- #
+# ------------------------------- #
 
 # --- Translation Pathway --- #
 
 # Genes related to translation
-# translation_genes <- c(gene_set$sao03010_Ribosome,gene_set$`sao00970_Aminoacyl-tRNA_biosynthesis`)
-
 cnts_translation <- cnts[cnts$pathway == "Ribosome" | cnts$pathway == "Aminoacyl-tRNA_biosynthesis" | cnts$pathway == "Translation factors",]
-
-# Keep counting with meta-informations available
-# cnts_translation <- cnts[which(rownames(cnts) %in% gene_inf_data$locus.tag),]
-
-# Keep counting which are in genes translation set
-# cnts_translation <- cnts_translation[which(rownames(cnts_translation) %in% translation_genes),]
 
 # Add genes id columns
 cnts_translation["Gene.ID"] <- gene_inf_data$Gene.ID[which(gene_inf_data$locus.tag %in% rownames(cnts_translation))]
-
-# DataFrame used for plotting
-# plot_data <- cnts_translation[,c("logBaseMean","logFC","padj","Gene.ID")]
-
-# Significance colums by adjusted p-value
-# plot_data["Significance"] = ifelse(plot_data$padj < 0.05, "Significant", "Not Significant")
-
-# Translation pathway columns
-# plot_data["Translation"] <- ifelse(plot_data$Gene.ID %in% gene_set$`sao00970_Aminoacyl-tRNA_biosynthesis`,"AA-tRNA_synthetase","Ribosome")
-
-# Color used for significance plotting
-# p_color <- ifelse(plot_data$Significance == "Significant", "red", "grey")
 
 jpeg(filename = "MA-Plot_of_genes_related_to_translation.jpg",width = 1000, height = 1000)
 

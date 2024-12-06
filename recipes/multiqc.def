@@ -9,7 +9,7 @@ From: ubuntu:{{ OSVersion }}
 
 %help
 
-MultiQC {{ MultiQC }} container for quality check
+MultiQC {{ MultiQC }} container for FASTQC quality check
 
 %labels
     Software MultiQC
