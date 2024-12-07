@@ -12,6 +12,8 @@ process featureCounts {
     label 'medCPU'
 
     container ''
+
+    publishDir "${params.outputDir}/FEATURECOUNTS", mode: 'symlink', pattern: "featureCounts.txt"
     
     // Define the input : path to the bam_files and path to the annotation file
     input:
