@@ -323,7 +323,7 @@ ggplot(pca_array_trans, aes(x = as.numeric(PC1), y = as.numeric(PC2), color = pa
   facet_wrap(~ pathway, scales = "free", ncol = 3) +
   labs(
     title = "PCA of Gene Expression",
-    x = paste0("PC1 (", round(100 * summary(pca_re_trans)$importance[2, 1], 1), "% variance)"),
+    x = paste0("PC1 (", round(100 * summary(pca_res_trans)$importance[2, 1], 1), "% variance)"),
     y = paste0("PC2 (", round(100 * summary(pca_res_trans)$importance[2, 2], 1), "% variance)")
   ) +
   theme_minimal() +
