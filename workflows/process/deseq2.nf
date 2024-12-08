@@ -2,7 +2,7 @@ process deseq2 {
 
     label 'medCPU'
 
-    container ''
+    container "${projectDir}/apptainer/DESeq2.sif"
 
     publishDir "${params.outputDir}/R", mode: 'copy', overwrite: true, pattern: "*.jpg"
 

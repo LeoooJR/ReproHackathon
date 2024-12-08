@@ -2,7 +2,7 @@ process multiqc {
 
     label 'lowCPU'
     
-    container ''
+    container "${projectDir}/apptainer/multiqc.sif"
     
     publishDir "${params.outputDir}/MULTIQC", mode: 'symlink', pattern: "multiqc_report.html"
         

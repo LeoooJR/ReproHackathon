@@ -8,7 +8,7 @@ process mapping {
     label 'highCPU'
     label 'retry'
 
-    container ''
+    container "${projectDir}/apptainer/bowtie.sif"
 
     // Define the input : gzipped FASTQ files with sequenced reads and the bowtie index 
     input: 
@@ -35,7 +35,7 @@ process indexingG {
 
     label 'medCPU'
 
-    container ''
+    container "${projectDir}/apptainer/bowtie.sif"
 
     // Define the input: genome file in FASTA format 
     input:

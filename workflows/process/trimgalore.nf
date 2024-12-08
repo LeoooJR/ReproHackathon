@@ -8,7 +8,7 @@
 
  process trimgalore {
 
-   container ''
+   container "${projectDir}/apptainer/trimgalore.sif"
 
     // Define the input: FASTQ file on which trimgalore will act
     input:

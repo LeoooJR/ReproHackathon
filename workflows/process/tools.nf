@@ -1,6 +1,6 @@
 process download {
 
-    container ''
+    container "${projectDir}/apptainer/ubuntu.sif"
 
     input:
     val(file_name)

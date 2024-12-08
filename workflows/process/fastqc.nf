@@ -8,7 +8,7 @@ process fastqc {
 
     label 'lowCPU'
 
-    container ''
+    container "${projectDir}/apptainer/fastqc.sif"
 
     publishDir "${params.outputDir}/FASTQC", mode: 'symlink', pattern: "*_fastqc.*"
 

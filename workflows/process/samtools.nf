@@ -2,7 +2,7 @@ process samtools {
 
     label 'lowCPU'
     
-    container ''
+    container "${projectDir}/apptainer/samtools.sif"
 
     input:
     path(sam)

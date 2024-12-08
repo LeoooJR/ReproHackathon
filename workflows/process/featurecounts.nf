@@ -11,7 +11,7 @@ process featureCounts {
 
     label 'medCPU'
 
-    container ''
+    container "${projectDir}/apptainer/featurecounts.sif"
 
     publishDir "${params.outputDir}/FEATURECOUNTS", mode: 'symlink', pattern: "featureCounts.txt"
     

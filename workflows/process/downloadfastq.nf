@@ -8,7 +8,7 @@ process downloadfastq {
 
     label 'medCPU'
 
-    container ''
+    container "${projectDir}/apptainer/sratoolkit.sif"
 
     publishDir "${params.outputDir}/FASTQ", mode: 'copy', overwrite: true, pattern: "*.fastq.gz"
 
