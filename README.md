@@ -50,6 +50,9 @@ cd ReproHackathon
 curl -s https://get.nextflow.io | bash
 # For Apptainer installation, see: https://apptainer.org/docs/getting-started/
 
+# If necessary
+sudo apt install uidmap
+
 # Launch the pipeline
 chmod +x ./workflow.sh
 ./workflow.sh --launch
