@@ -48,9 +48,11 @@ cd ReproHackathon
 # Set up Apptainer/Nextflow if not already installed
 # For Nextflow installation:
 curl -s https://get.nextflow.io | bash
-# For Apptainer installation, see: https://apptainer.org/docs/getting-started/
+# For Apptainer installation, see: https://apptainer.org/docs/user/main/quick_start.html#installation
+# Using Conda: 
+conda install apptainer
 
-# If necessary
+# If necessary for Apptainer
 sudo apt install uidmap
 
 # Launch the pipeline
